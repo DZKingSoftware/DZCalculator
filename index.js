@@ -223,3 +223,11 @@ async function dollor() {
     const amountInUzs = amountInUsd * usdToUzsRate;
     document.getElementById('yechish').value = `USZ: ${amountInUzs.toFixed(0)}`;
 }
+function Qoldiq() {
+    try {
+        const natija = eval(display.value);
+        display.value = natija;
+    } catch (error) {
+        display.value = "Xato!";
+    }
+}
