@@ -62,7 +62,6 @@ function clearr() {
 function B() {
     const inputValue = display.value.trim();
 
-    // Narx va chegirma foizini ajratish
     const [price, discountPercentage] = inputValue.split(',').map(value => parseFloat(value.trim()));
 
     if (!isNaN(price) && !isNaN(discountPercentage) && price > 0 && discountPercentage >= 0) {
@@ -105,7 +104,6 @@ const Btns = document.querySelectorAll(".cal-btn").forEach(btn => {
         div.innerHTML = btn.textContent;
         div.classList.add('animation');
 
-        // Ekran o‘lchamiga qarab animatsiya joylashuvi
         const screenWidth = window.innerWidth;
         const startX = Math.random() * (screenWidth < 600 ? 100 : anime.offsetWidth - 10);
         div.style.left = `${startX}px`;
@@ -114,7 +112,7 @@ const Btns = document.querySelectorAll(".cal-btn").forEach(btn => {
 
         setTimeout(() => {
             anime.removeChild(div);
-        }, screenWidth < 600 ? 3000 : 5000);  // Kichik ekranda vaqt qisqaradi
+        }, screenWidth < 600 ? 3000 : 5000);
     });
 });
 
@@ -186,20 +184,17 @@ function Delete() {
 function Tenglama() {
     const tenglama = document.getElementById('yechish').value.trim();
 
-    // Bo'sh yoki noto‘g‘ri tenglamani tekshirish
     if (tenglama === "") {
         document.getElementById('yechish').value = "Iltimos, tenglamani kiriting!";
         return;
     }
 
     try {
-        // Tenglamani "=" belgisi bo‘yicha ajratish
         const parts = tenglama.split('=');
         if (parts.length === 2) {
-            const leftSide = parts[0].trim();  // Chap tomon
-            const rightSide = parts[1].trim(); // O'ng tomon
+            const leftSide = parts[0].trim();
+            const rightSide = parts[1].trim();
 
-            // Math.js bilan tenglamani yechish
             const result = math.solve(`${leftSide} = ${rightSide}`, 'x');
             document.getElementById('yechish').value = `x = ${result[0]}`;
         } else {
@@ -212,7 +207,6 @@ function Tenglama() {
     console.log(tenglama); 
 }
 async function getExchangeRate() {
-    // Valyuta kursini oluvchi API manzili
     const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
     const data = await response.json();
     return data.rates.UZS;
