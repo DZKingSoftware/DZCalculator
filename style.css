@@ -5,6 +5,10 @@
     box-sizing: border-box;
     transition: 0.4s;
 }
+*::selection {
+    color: red;
+    background-color: green;
+}
 body {
     /* width: 100%; */
     background-color: black;
