@@ -5,17 +5,56 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 5000);
 })
 
-window.onload = function () {
-    let saveName = localStorage.getItem('save');
-    if (saveName) {
-        PName.textContent = saveName;
-        formContainer.style.display = 'none'
-        Menu.style.display = 'block'
-    }
-    if (localStorage.getItem('loginsave') === 'true') {
-        document.querySelector(".login-box").style.display = "none";
+function SaveLogin() {
+    window.onload = function () {
+        let saveName = localStorage.getItem('save');
+        if (saveName) {
+            PName.textContent = saveName;
+            formContainer.style.display = 'none'
+            Menu.style.display = 'block'
+        }
+        if (localStorage.getItem('loginsave') === 'true') {
+            document.querySelector(".login-box").style.display = "none";
+        }
+        if (localStorage.getItem('mainfon')) {
+            document.body.style.backgroundColor = localStorage.getItem('mainfon')
+        }
+        if (localStorage.getItem('bColor')) {
+            display.style.backgroundColor = localStorage.getItem('bColor')
+        }
+        if (localStorage.getItem('cColor')) {
+            display.style.color = localStorage.getItem('cColor')
+        }
+        if (localStorage.getItem('calBox')) {
+            CalBox.style.backgroundColor = localStorage.getItem('calBox')
+        }
+        if (localStorage.getItem('calText')) {
+            document.querySelectorAll('.cal-btn').forEach(CB => {
+                CB.style.backgroundColor = localStorage.getItem('calText')
+            })
+        }
+        if (localStorage.getItem('calTextColor')) {
+            document.querySelectorAll('.cal-btn').forEach(CB => {
+                CB.style.color = localStorage.getItem('calTextColor')
+            })
+        }
+        if (localStorage.getItem('calKColor')) {
+            document.querySelector('.cal-k').style.backgroundColor = localStorage.getItem('calKColor')
+        }
+        if (localStorage.getItem("hBtnsBColor")) {
+            document.querySelectorAll("#h-btns").forEach(HBtnss => {
+                HBtnss.style.backgroundColor = localStorage.getItem("hBtnsBColor");
+            });
+        }
+        if (localStorage.getItem("hBtnsCColor")) {
+            document.querySelectorAll("#h-btns").forEach(HBtnss => {
+                HBtnss.style.color = localStorage.getItem("hBtnsCColor");
+            });
+        }
     }
 }
+
+SaveLogin()
 
 function checkPassword() {
     const correctPassword = "King";
@@ -111,6 +150,7 @@ const FBtn = document.getElementById("menu-fon");
 FBtn.addEventListener("click", () => {
     let BColor = MFon.value;
     document.body.style.backgroundColor = BColor
+    localStorage.setItem('mainfon', BColor)
 });
 const IBtn = document.getElementById("input-btn");
 const Binput = document.getElementById("input-b");
@@ -121,24 +161,31 @@ IBtn.addEventListener("click", () => {
     let CColor = Cinput.value;
     display.style.backgroundColor = BColor;
     display.style.color = CColor;
+
+    localStorage.setItem('bColor', BColor);
+    localStorage.setItem('cColor', CColor)
 });
 
 const Tinput = document.getElementById('cal-input-t')
 const Ninput = document.getElementById('cal-input-n')
 const COinput = document.getElementById('cal-input-c')
 const CalBtn = document.getElementById('call-btn');
+const CalBox = document.querySelector('.cal-box');
 
 CalBtn.addEventListener('click', () => {
     let T = Tinput.value
     let N = Ninput.value
     let C = COinput.value
-    const CalBox = document.querySelector('.cal-box');
     document.querySelectorAll('.cal-btn').forEach(CB => {
         CB.style.backgroundColor = N;
         CB.style.color = C;
     })
 
-    CalBox.style.backgroundColor = T
+    CalBox.style.backgroundColor = T;
+
+    localStorage.setItem('calBox', T);
+    localStorage.setItem('calText', N)
+    localStorage.setItem('calTextColor', C)
 });
 
 const HinputB = document.getElementById('h-input-t')
@@ -156,6 +203,9 @@ HBtn.addEventListener('click', () => {
         HBtnss.style.backgroundColor = N;
         HBtnss.style.color = C;
     })
+    localStorage.setItem("calKColor", T);
+    localStorage.setItem("hBtnsBColor", N);
+    localStorage.setItem("hBtnsCColor", C);
 });
 
 const ML = document.querySelector('.menu-list');
