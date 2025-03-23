@@ -2,22 +2,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const content = document.querySelector('.loading');
     setTimeout(() => {
         content.style.display = 'none';
-    }, 5000);
+    }, 10);
 })
+
+window.onload = function () {
+    let saveName = localStorage.getItem('save');
+    if (saveName) {
+        PName.textContent = saveName;
+        formContainer.style.display = 'none'
+        Menu.style.display = 'block'
+    }
+    if (localStorage.getItem('loginsave') === 'true') {
+        document.querySelector(".login-box").style.display = "none";
+    }
+}
+
 function checkPassword() {
     const correctPassword = "King";
     const LoginC = "DZKing";
 
     const login = document.getElementById("login").value;
     const inputPassword = document.getElementById("password").value;
+    const LoginActive = document.querySelector('.login-active.ac');
+    const errorText = document.querySelector('.login-active.re');
 
     if (inputPassword === correctPassword && login === LoginC) {
+        localStorage.setItem('loginsave', 'true')
+        LoginActive.classList.add('active')
         document.querySelector(".login-box").style.display = "none";
     } else {
         const errorMessage = document.getElementById("error-message");
         errorMessage.style.display = "block";
+        errorText.classList.add('remove')
     }
 };
+
 const NBtn = document.querySelector(".p-btn");
 const PName = document.querySelector(".namee");
 const PInputField = document.getElementById("name-input");
@@ -26,31 +45,21 @@ const Menu = document.querySelector('.menu');
 Menu.style.display = "none"
 
 NBtn.addEventListener("click", () => {
+
     const PInput = PInputField.value.trim();
-    
+
     if (PInput === "Dilshod") {
         PName.textContent = "Admin Panel";
         Menu.style.display = "block";
-        PInputField.value = "";
-        formContainer.style.display = 'none';
     } else if (PInput) {
         PName.textContent = PInput;
-        formContainer.style.display = "none";
     }
-    localStorage.setItem("savedName", PName.textContent);
-});
-// document.addEventListener("DOMContentLoaded", () => {
-//     const savedName = localStorage.getItem("savedName");
 
-//     if (savedName !== "Dilshod") {
-//         PName.textContent = savedName;
-//         if (savedName) {
-//             formContainer.style.display = "none";
-//         } else {
-//             formContainer.style.display = "block";
-//         }
-//     }
-// });
+    localStorage.setItem('save', PName.textContent);
+
+    PInput.value = '';
+    formContainer.style.display = 'none'
+});
 
 const display = document.getElementById("yechish");
 function appened(input) {
@@ -76,26 +85,6 @@ function B() {
 function calculate() {
     display.value = eval(display.value);
 }
-
-// const anime = document.querySelector('.animation-all');
-// const Btns = document.querySelectorAll(".cal-btn").forEach(
-//     btn => btn.addEventListener("click", () => {
-//         const div = document.createElement("div");
-//         div.innerHTML = btn.textContent;
-//         div.classList.add('animation');
-//         anime.appendChild(div);
-
-//         const startX = Math.random() * (anime.offsetWidth - 30);
-//         div.style.left = `${startX}px`;
-
-//         const direction = Math.random() < 0.5 ? -1 : 1;
-//         div.style.setProperty('--direction', direction);
-
-//         setTimeout(() => {
-//             anime.removeChild(div);
-//           }, 5000);
-//     })
-// );
 
 const anime = document.querySelector('.animation-all');
 const Btns = document.querySelectorAll(".cal-btn").forEach(btn => {
@@ -171,9 +160,6 @@ HBtn.addEventListener('click', () => {
 
 const ML = document.querySelector('.menu-list');
 
-// MX.addEventListener("click", () => {
-//     ML.style.transform = 'TranslateX(500px)'
-// })
 Menu.addEventListener("click", () => {
     ML.classList.toggle('m-class')
 });

@@ -70,14 +70,65 @@ body {
     100% {
       transform: rotate(-360deg);
     }
-  } 
+  }
+.login-active {
+    display: none;
+}
+.login-active span {
+    color: green;
+    font-size: 25px;
+    font-weight: 700;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+}
+.login-active div img {
+    margin-right: 3px;
+}
+.login-active div {
+    width: 340px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 0;
+    position: fixed;
+    left: 0; right: 0;
+    z-index: 990000;
+    border: 3px solid black;
+    animation: active 0.7s linear forwards, remove 6s linear forwards;
+}
+.active {
+    display: block;
+}
+.remove {
+    display: block;
+}
+@keyframes active {
+    0% {
+        transform: translateY(-100px);
+    }
+}
+@keyframes remove {
+    0% {
+        opacity: 10;
+        visibility: visible;
+    } 50% {
+    }
+    100% {
+        opacity: 0;
+        visibility: unset;
+    }
+}
 .login-box {
     position: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
     bottom: 0; top: 0;
-    /* backdrop-filter: blur(30px); */
     background-color: #ff0000;
     height: 100%;
     width: 100%;
