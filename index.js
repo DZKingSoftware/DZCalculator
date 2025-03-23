@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const content = document.querySelector('.loading');
     setTimeout(() => {
         content.classList.add('loadremove')
-    }, 10);
+    }, 3000);
 })
 
 function SaveLogin() {
