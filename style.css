@@ -12,7 +12,6 @@
 body {
     /* width: 100%; */
     background-color: black;
-    overflow-x: hidden;
     position: relative;
 }
 .loading {
@@ -25,6 +24,11 @@ body {
     align-items: center;
     justify-content: center;
     background-color: black;
+}
+.loadremove {
+    opacity: 0;
+    visibility: visible;
+    z-index: -1;
 }
 .loader {
     width: 48px;

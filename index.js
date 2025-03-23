@@ -1,17 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
     const content = document.querySelector('.loading');
     setTimeout(() => {
-        content.style.display = 'none';
-    }, 5000);
+        content.classList.add('loadremove')
+    }, 10);
 })
 
 function SaveLogin() {
     window.onload = function () {
         let saveName = localStorage.getItem('save');
+        let isAdmin = localStorage.getItem('isAdmin')
         if (saveName) {
             PName.textContent = saveName;
             formContainer.style.display = 'none'
-            Menu.style.display = 'block'
+            if (isAdmin === 'true') {
+                Menu.style.display = 'block'
+            } else {
+                Menu.style.display = 'none'
+            }
         }
         if (localStorage.getItem('loginsave') === 'true') {
             document.querySelector(".login-box").style.display = "none";
@@ -67,7 +72,7 @@ function checkPassword() {
 
     if (inputPassword === correctPassword && login === LoginC) {
         localStorage.setItem('loginsave', 'true')
-        LoginActive.classList.add('active')
+        LoginActive.classList.add('active');
         document.querySelector(".login-box").style.display = "none";
     } else {
         const errorMessage = document.getElementById("error-message");
@@ -81,7 +86,7 @@ const PName = document.querySelector(".namee");
 const PInputField = document.getElementById("name-input");
 const formContainer = document.querySelector(".profile-type");
 const Menu = document.querySelector('.menu');
-Menu.style.display = "none"
+
 
 NBtn.addEventListener("click", () => {
 
@@ -89,9 +94,12 @@ NBtn.addEventListener("click", () => {
 
     if (PInput === "Dilshod") {
         PName.textContent = "Admin Panel";
+        localStorage.setItem('isAdmin', 'true')
         Menu.style.display = "block";
     } else if (PInput) {
         PName.textContent = PInput;
+        localStorage.setItem('isAdmin', 'false')
+        Menu.style.display = 'none'
     }
 
     localStorage.setItem('save', PName.textContent);
