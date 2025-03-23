@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const content = document.querySelector('.loading');
     setTimeout(() => {
         content.style.display = 'none';
-    }, 10);
+    }, 5000);
 })
 
 window.onload = function () {
