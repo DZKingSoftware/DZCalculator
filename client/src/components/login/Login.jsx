@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import bgImge from '../../assets/background/bg.jpg';
 import successIcon from '../../assets/icons/check.png';
 import errorIcon from '../../assets/icons/remove.png';
-import './Login.css';
+import './login.css';
 
 function Login({ onLogin }) {
     const [username, setUsername] = useState('');
