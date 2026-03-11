@@ -50,7 +50,7 @@ function Login({ onLogin }) {
             <div className="bg-blur w-full h-screen flex flex-col justify-center items-center">
                 <h1 className="text-yellow-400 text-3xl font-bold">DZKing Calculeshion</h1>
                 <div className={`msg-alert
-                bg-white transform duration-500 ease-in-out transition-all fixed border ${showMsg ? 'opacity-100 -translate-y-100' : 'opacity-0 -translate-y-130'
+                bg-white transform duration-500 ease-in-out transition-all fixed border ${showMsg ? 'opacity-100 top-10' : 'opacity-0 -top-30'
                     }`}>
                     <div className="">
                         {error && (
@@ -108,7 +108,7 @@ function Login({ onLogin }) {
                             padding: '7px',
                         }}
                     >
-                        Login
+                        {!success ? 'Login' : 'Loading...'}
                     </button>
                 </form>
             </div>

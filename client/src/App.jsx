@@ -1,15 +1,33 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Navigate, Route } from 'react-router-dom';
 import Login from './components/login/Login';
 import Main from './components/Main';
+import Spinner from './components/spinner/Spinner';
 import './App.css'
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleLogin = () => {
     setIsLogin(true);
   };
+
+  useEffect(() => {
+    const handleLoad = () => {
+      setIsLoading(false);
+    };
+
+    if (document.readyState === 'complete') {
+      setIsLoading(false);
+    } else {
+      window.addEventListener('load', handleLoad)
+    }
+  }, []);
+
+  if(isLoading) {
+    return <Spinner />
+  }
 
   return (
     <Router>
