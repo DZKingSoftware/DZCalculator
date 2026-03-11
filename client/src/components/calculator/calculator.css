@@ -1,0 +1,21 @@
+.number-cal {
+    border: 2px solid yellow;
+    color: white;
+    background-color: #00800098;
+}
+button {
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px;
+    font-weight: bold;
+    backdrop-filter: blur(10px);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.operators {
+    border: 2px solid lime;
+    color: yellow;
+    background-color: #7efc0098;
+}

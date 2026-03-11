@@ -1,0 +1,32 @@
+* {
+    padding: 0; margin: 0;
+    box-sizing: border-box;
+    transition: 0.5s;
+}
+html, body {
+    overflow: hidden;
+}
+.bg-blur {
+    background-color: #00000034;
+    backdrop-filter: blur(30px);
+}
+.msg-alert {
+    padding: 7px 20px;
+    border-radius: 10px;
+}
+button {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+@media screen and (max-width: 776px) {
+    form {
+        width: 100%;
+        padding: 20px 70px;
+    }
+    h1 {
+        font-size: x-large;
+    }
+}
