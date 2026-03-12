@@ -6,9 +6,10 @@ import { TiDivideOutline } from 'react-icons/ti';
 import { TiPlusOutline } from "react-icons/ti";
 import { TiMinusOutline } from 'react-icons/ti';
 import { FaEquals } from "react-icons/fa6";
+import { FaHistory } from 'react-icons/fa';
 import './calculator.css';
 
-function Calculator() {
+function Calculator({ addToHistory, toggleList, showList, isRecording }) {
     const [display, setDisplay] = useState('0');
     const [prevValue, setPrevValue] = useState(null);
     const [operator, setOperator] = useState(null);
@@ -39,6 +40,7 @@ function Calculator() {
             setPrevValue(inputValue);
         } else if (operator) {
             const result = calculate(prevValue, inputValue, operator);
+            addToHistory(prevValue, inputValue, operator, result);
             setDisplay(String(result));
             setPrevValue(result);
         }
@@ -61,6 +63,9 @@ function Calculator() {
         if (operator && prevValue !== null) {
             const inputValue = parseFloat(display);
             const result = calculate(prevValue, inputValue, operator);
+            if (isRecording) {
+                addToHistory(prevValue, inputValue, operator, result);
+            }
             setDisplay(String(result));
 
             setPrevValue(null);
@@ -129,6 +134,7 @@ function Calculator() {
                         <button className="operators" onClick={() => handleOperator('*')}><FaXmark /></button>
                         <button className="operators" onClick={() => handleOperator('-')}><TiMinusOutline /></button>
                         <button className="operators" onClick={() => handleOperator('+')}><TiPlusOutline /></button>
+                        <button className="operators" onClick={toggleList} ><FaHistory /></button>
 
                     </div>
                 </div>

@@ -22,3 +22,16 @@
 @keyframes l22 {
   100% {transform: rotate(1turn)}
 }
+.cont-spinner {
+  background-color: #005700;
+  backdrop-filter: blur(20px);
+  inset: 0;
+  z-index: 999;
+  transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+  opacity: 1;
+  visibility: visible;
+}
+.cont-spinner.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}

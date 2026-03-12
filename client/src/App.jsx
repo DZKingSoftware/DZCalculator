@@ -6,27 +6,32 @@ import Spinner from './components/spinner/Spinner';
 import './App.css'
 
 function App() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(() => {
+    return localStorage.getItem('isLogin') === 'true';
+  });
   const [isLoading, setIsLoading] = useState(true);
+  const [isFadeOut, setIsFadeOut] = useState(false);
 
   const handleLogin = () => {
     setIsLogin(true);
+    localStorage.setItem('isLogin', 'true')
   };
 
   useEffect(() => {
     const handleLoad = () => {
-      setIsLoading(false);
+      setIsFadeOut(true);
+      setTimeout(() => setIsLoading(false), 1000);
     };
 
     if (document.readyState === 'complete') {
       setIsLoading(false);
     } else {
-      window.addEventListener('load', handleLoad)
+      window.addEventListener('load', handleLoad);
     }
   }, []);
 
   if(isLoading) {
-    return <Spinner />
+    return <Spinner isFadeOut={isFadeOut} />
   }
 
   return (

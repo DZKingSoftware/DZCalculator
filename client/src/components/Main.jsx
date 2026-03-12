@@ -1,8 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import bgImage from '../assets/background/bgMain.jpg';
 import Calculator from "./calculator/Calculator";
+import History from "./history/History";
 
 function Main() {
+    const [history, setHistory] = useState([]);
+    const [showList, setShowList] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+
+    const addToHistory = (a, b, op, res) => {
+        if (isRecording !== 'Error') {
+            const newItem = {
+                operation: `${a} ${op} ${b}`,
+                res: res
+            }
+            setHistory(prev => [newItem, ...prev]);
+        };
+    };
+
+    const clearHistory = () => {
+        setHistory([]);
+    }
+
+    const total = history.reduce((acc, item) => acc + Number(item.res), 0);
+
     return (
         <div className="w-full h-screen"
             style={{
@@ -17,7 +38,22 @@ function Main() {
                         backgroundColor: '#00000034',
                         backdropFilter: 'blur(40px)'
                     }}>
-                        <Calculator />
+                        <Calculator 
+                            addToHistory={addToHistory}
+                            toggleList={() => setShowList(!showList)}
+                            showList={showList}
+                            isRecording={isRecording}
+                        />
+                        {showList && (
+                            <History 
+                                history={history}
+                                total={total}
+                                isRecording={isRecording}
+                                setIsRecording={setIsRecording}
+                                toggleList={() => setShowList(!showList)}
+                                clearHistory={clearHistory}
+                            />
+                        )}
                 </div>
         </div>
     )

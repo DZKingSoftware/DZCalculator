@@ -1,15 +1,9 @@
 import React from 'react';
 import './spinner.css'
 
-function Spinner() {
+function Spinner({ isFadeOut }) {
     return (
-        <div className="w-full h-screen fixed inset-0 flex justify-center items-center"
-            style={{
-                zIndex: '999',
-                backgroundColor: '#00000018',
-                backdropFilter: 'blur(20px)',
-            }}
-        >
+        <div className={`cont-spinner w-full h-screen fixed inset-0 flex justify-center items-center ${isFadeOut ? 'fade-out' : ''}`}>
             <div className="loader"></div>
         </div>
     )

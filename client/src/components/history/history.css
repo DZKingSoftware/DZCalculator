@@ -1,0 +1,16 @@
+td, th {
+  padding: 5px 10px;
+  overflow: hidden;
+}
+.table-con {
+  overflow-x: hidden;
+  overflow-y: auto;
+
+}
+.table-con::-webkit-scrollbar {
+  width: 5px;
+}
+.table-con::-webkit-scrollbar-thumb {
+  background-color: yellow;
+  border-radius: 10px;
+}
