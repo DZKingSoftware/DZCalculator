@@ -7,14 +7,14 @@ import './App.css'
 
 function App() {
   const [isLogin, setIsLogin] = useState(() => {
-    return localStorage.getItem('isLogin') === 'true';
+    // return localStorage.getItem('isLogin') === 'true';
   });
   const [isLoading, setIsLoading] = useState(true);
   const [isFadeOut, setIsFadeOut] = useState(false);
 
   const handleLogin = () => {
     setIsLogin(true);
-    localStorage.setItem('isLogin', 'true')
+    // localStorage.setItem('isLogin', 'true')
   };
 
   useEffect(() => {
@@ -31,7 +31,7 @@ function App() {
   }, []);
 
   if(isLoading) {
-    return <Spinner isFadeOut={isFadeOut} />
+    return <Spinner isFadeOut={isFadeOut} />;
   }
 
   return (

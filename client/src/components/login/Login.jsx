@@ -1,33 +1,52 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import bgImge from '../../assets/background/bg.jpg';
 import successIcon from '../../assets/icons/check.png';
 import errorIcon from '../../assets/icons/remove.png';
+import { getDeviceId } from "../utils/getDeviceId";
 import './login.css';
 
 function Login({ onLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false);
+    const [success, setSuccess] = useState('');
     const [showMsg, setShowMsg] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         setError('');
         setSuccess('');
         setShowMsg(false);
 
-        if (username.trim() || password.trim()) {
-            setSuccess('Login Successful!');
-            setShowMsg(true);
+        try {
+            const deviceId = await getDeviceId();
 
-            setTimeout(() => {
-                onLogin();
-            }, 2000);
-        } else {
-            setError('Invalid username or password');
+            const response = await axios.post('http://localhost:5000/api/login', {
+                loginToken: username,
+                passwordToken: password,
+                deviceId: deviceId
+            });
+
+            if (response.data.success) {
+                setSuccess(`Xush Kelibsiz, ${response.data.name}`);
+                setShowMsg(true);
+
+                localStorage.setItem("userName", response.data.name);
+                localStorage.setItem("isLoggedIn", 'true');
+
+                setTimeout(() => {
+                    onLogin();
+                }, 2000)
+            }
+        } catch (error) {
+            const errorMsg = error.response?.data?.message || `Login yoki Parol Noto'g'ri!`
+            setError(errorMsg);
             setShowMsg(true);
+        } finally {
+            setIsLoading(false)
         }
     };
     useEffect(() => {
@@ -41,12 +60,12 @@ function Login({ onLogin }) {
     }, [showMsg, error]);
 
     return (
-        <div className="min-h-screen w-ful" 
-        style={{
-            backgroundImage: `url(${bgImge})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-        }}>
+        <div className="min-h-screen w-ful"
+            style={{
+                backgroundImage: `url(${bgImge})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover',
+            }}>
             <div className="bg-blur w-full h-screen flex flex-col justify-center items-center">
                 <h1 className="text-yellow-400 text-3xl font-bold">DZKing Calculeshion</h1>
                 <div className={`msg-alert
@@ -75,9 +94,9 @@ function Login({ onLogin }) {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             className="text-green-500 text-lg bg-black w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                            style={{ 
+                            style={{
                                 padding: '5px 10px',
-                             }}
+                            }}
                             placeholder="Username"
                             required
                         />
@@ -92,9 +111,9 @@ function Login({ onLogin }) {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="text-green-500 bg-black text-lg focus:outline-none focus:ring-2 focus:ring-green-500 w-full rounded-lg"
-                            style={{ 
+                            style={{
                                 padding: '5px 10px'
-                             }}
+                            }}
                             placeholder="******"
                             required
                         />
