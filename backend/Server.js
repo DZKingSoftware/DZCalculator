@@ -1,32 +1,37 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-const jwt = require('jsonwebtoken')
-const readline = require('readline');
+const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const app = express();
 require('dotenv').config();
-const User = require('./moduls/Users');
 
+const User = require('./moduls/Users');
+const app = express();
+
+// Middleware
 app.use(express.json());
-const PORT = process.env.PORT || 5000
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
+
+// Environment Variables
+const PORT = process.env.PORT || 5000;
 const MONGO_URL = process.env.MONGO_URL;
 const JWT_SECRET = process.env.JWT_SECRET;
 
-app.use(cors({
-    origin: 'https://dz-calculator.netlify.app', // Faqat sizning frontendga ruxsat beradi
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true // Agar cookie yoki token ishlatilsa kerak bo'ladi
-}));
-
+// MongoDB Connection
 mongoose.connect(MONGO_URL)
-    .then(() => console.log('Mongo-DB Connected'))
-    .catch((err) => console.log('MongoDB Error', err));
+    .then(() => console.log('✅ Mongo-DB Connected'))
+    .catch((err) => console.log('❌ MongoDB Error', err));
 
+// --- API ROUTES ---
+
+// Admin: Foydalanuvchi yaratish (Bot orqali chaqiriladi)
 app.post('/api/admin/create-user', async (req, res) => {
     try {
         const { name, maxDevices } = req.body;
-
         const loginToken = crypto.randomBytes(4).toString('hex');
         const passwordToken = crypto.randomBytes(4).toString('hex');
 
@@ -39,12 +44,13 @@ app.post('/api/admin/create-user', async (req, res) => {
         });
 
         await newUser.save();
-        res.status(201).json({ name, loginToken, passwordToken, maxDevices });
+        res.status(201).json({ name, loginToken, passwordToken, maxDevices: newUser.maxDevices });
     } catch (error) {
         res.status(500).json({ message: 'Serverda Xatolik!', error: error.message });
     }
 });
 
+// Login: Foydalanuvchi kirishi
 app.post('/api/login', async (req, res) => {
     try {
         const { loginToken, passwordToken, deviceId } = req.body;
@@ -62,17 +68,17 @@ app.post('/api/login', async (req, res) => {
 
         if (!isAlreadyRegistered) {
             if (user.usedDevices.length >= user.maxDevices) {
-                return res.status(403).json({ message: `Limit To'lgan` })
+                return res.status(403).json({ message: `Limit To'lgan` });
             }
             user.usedDevices.push(deviceId);
             await user.save();
-        };
+        }
 
         const token = jwt.sign(
             { userId: user._id, name: user.name },
             JWT_SECRET,
             { expiresIn: '30d' }
-        )
+        );
 
         res.json({
             success: true,
@@ -81,50 +87,17 @@ app.post('/api/login', async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ message: 'Xatolik Yuz Berdi!', error: error.message });
-    };
+    }
 });
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+// Telegram Botni ishga tushirish (bot.js fayli mavjud bo'lsa)
+try {
+    require('./tgbot/bot'); 
+} catch (e) {
+    console.log("⚠️ Bot fayli topilmadi, faqat API ishga tushmoqda.");
+}
 
-// Terminaldan komanda kutish funksiyasi
-const startCLI = () => {
-    rl.question('\nBuyruq kiriting (create / exit): ', async (cmd) => {
-        if (cmd === 'create') {
-            rl.question('Ism: ', async (name) => {
-                rl.question('Qurilma limiti: ', async (limit) => {
-                    try {
-                        const loginToken = crypto.randomBytes(4).toString('hex');
-                        const passwordToken = crypto.randomBytes(4).toString('hex');
-
-                        const newUser = new User({
-                            name,
-                            loginToken,
-                            passwordToken,
-                            maxDevices: Number(limit) || 1
-                        });
-
-                        await newUser.save();
-                        console.log(`\n✅ Yaratildi! \nLogin: ${loginToken} \nParol: ${passwordToken}`);
-                        startCLI(); // Qayta so'rash
-                    } catch (err) {
-                        console.log("Xato:", err.message);
-                        startCLI();
-                    }
-                });
-            });
-        } else if (cmd === 'exit') {
-            process.exit();
-        } else {
-            console.log("Noma'lum buyruq.");
-            startCLI();
-        }
-    });
-};
-
+// Serverni tinglash
 app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server Ishga Tushdi`)
-    startCLI();
-})
+    console.log(`🚀 Server ${PORT}-portda ishga tushdi`);
+});
