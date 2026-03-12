@@ -14,7 +14,7 @@ const MONGO_URL = process.env.MONGO_URL;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Faqat sizning frontendga ruxsat beradi
+    origin: 'https://dz-calculator.netlify.app', // Faqat sizning frontendga ruxsat beradi
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true // Agar cookie yoki token ishlatilsa kerak bo'ladi
 }));

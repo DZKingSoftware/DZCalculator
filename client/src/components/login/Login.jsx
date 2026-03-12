@@ -24,7 +24,7 @@ function Login({ onLogin }) {
         try {
             const deviceId = await getDeviceId();
 
-            const response = await axios.post('http://localhost:5000/api/login', {
+            const response = await axios.post('https://dzcalculator.onrender.com/api/login', {
                 loginToken: username,
                 passwordToken: password,
                 deviceId: deviceId
