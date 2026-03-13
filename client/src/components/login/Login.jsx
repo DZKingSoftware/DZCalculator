@@ -31,7 +31,7 @@ function Login({ onLogin }) {
             });
 
             if (response.data.success) {
-                setSuccess(`Xush Kelibsiz, ${response.data.name}`);
+                setSuccess(`Login in Success`);
                 setShowMsg(true);
 
                 localStorage.setItem("userName", response.data.name);
@@ -60,7 +60,7 @@ function Login({ onLogin }) {
     }, [showMsg, error]);
 
     return (
-        <div className="min-h-screen w-ful"
+        <div className="min-h-screen w-full"
             style={{
                 backgroundImage: `url(${bgImge})`,
                 backgroundRepeat: 'no-repeat',
@@ -84,7 +84,7 @@ function Login({ onLogin }) {
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="w-2xl">
+                <form onSubmit={handleSubmit} className="w-[80%] sm:w-2xl gap-y-2 flex flex-col">
                     <div>
                         <label className="block text-lg text-green-500 font-medium">
                             Username
@@ -98,7 +98,6 @@ function Login({ onLogin }) {
                                 padding: '5px 10px',
                             }}
                             placeholder="Username"
-                            required
                         />
                     </div>
 

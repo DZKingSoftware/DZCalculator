@@ -61,14 +61,14 @@ app.post('/api/login', async (req, res) => {
 
         const user = await User.findOne({ loginToken, passwordToken });
         if (!user) {
-            return res.status(401).json({ message: `Token No'to'g'ri` });
+            return res.status(401).json({ message: `Login or Password is Incorrect` });
         }
 
         const isAlreadyRegistered = user.usedDevices.includes(deviceId);
 
         if (!isAlreadyRegistered) {
             if (user.usedDevices.length >= user.maxDevices) {
-                return res.status(403).json({ message: `Limit To'lgan` });
+                return res.status(403).json({ message: `This user has reached his Limit` });
             }
             user.usedDevices.push(deviceId);
             await user.save();
@@ -86,7 +86,7 @@ app.post('/api/login', async (req, res) => {
             token: token
         });
     } catch (error) {
-        res.status(500).json({ message: 'Xatolik Yuz Berdi!', error: error.message });
+        res.status(500).json({ message: 'Error, Please try Again: ', error: error.message });
     }
 });
 

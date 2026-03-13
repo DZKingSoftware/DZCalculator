@@ -25,7 +25,7 @@ bot.hears('Login Parol Olish', async (ctx) => {
         return ctx.reply('Foydalanuvchi Ismini Kiriting: ');
     }
 
-    await bot.telegram.sendMessage(ADMIN_ID, `Yangi So'rov!\n Kimdan: ${ctx.from.first_name}\n ID: ${ctx.from.id}\n Login va Parol Olmoqchi.`);
+    await bot.telegram.sendMessage(ADMIN_ID, `Yangi So'rov!\n Kimdan: ${ctx.from.first_name}\n ID: ${ctx.from.username}\n Login va Parol Olmoqchi.`);
     ctx.reply(`So'rovingiz Muvofoqiyatli Yuborildi.`);
 });
 
@@ -47,7 +47,7 @@ bot.on('text', async (ctx) => {
         const targetUserId = originalMsg.match(/ID: (\d+)/)?.[1];
 
         if (targetUserId) {
-            await bot.telegram.sendMessage(targetUserId, `👨‍💻 Admin Xabari: ${text}`);
+            await bot.telegram.sendMessage(targetUserId, `🤖 So'rovingiz Bo'yicha: ${text}`);
             return ctx.reply('Xabar Yuborildi ✅');
         }
     }
@@ -58,7 +58,7 @@ bot.on('text', async (ctx) => {
         if (state.step === 'ASK_NAME') {
             adminState[userId].name = text;
             adminState[userId].step = 'ASK_DEVICES';
-            return ctx.reply(`${text} Qurulmalar Limitini Kiriting: `);
+            return ctx.reply(`${text} \n📱 Qurulmalar Limitini Kiriting: `);
         }
 
         if (state.step === 'ASK_DEVICES') {
@@ -83,12 +83,11 @@ bot.on('text', async (ctx) => {
                     await bot.telegram.deleteMessage(ctx.chat.id, waitingMsg.message_id);
                 }
 
-                const resultText = `✅ *Foydalanuvchi Yaratildi\\!* \n\n` +
-                                   `👤 *Isim:* ${name.replace(/-/g, '\\-')} \n` +
+                const resultText = `✅ *Success User Created\\!* \n\n` +
+                                   `👤 *User:* ${name.replace(/-/g, '\\-')} \n` +
                                    `🔑 *Login:* \`${loginToken}\` \n` +
-                                   `🔐 *Parol:* \`${passwordToken}\` \n` +
-                                   `📱 *Limit:* ${devices} \n\n` +
-                                   `_Nusxalash uchun ustiga bosing\\._`;
+                                   `🔐 *Password:* \`${passwordToken}\` \n` +
+                                   `📱 *Devices Limit:* ${devices} \n\n` +
 
                 await ctx.replyWithMarkdownV2(resultText);
                 delete adminState[userId]; 
@@ -96,7 +95,7 @@ bot.on('text', async (ctx) => {
                 if (waitingMsg) {
                     await bot.telegram.deleteMessage(ctx.chat.id, waitingMsg.message_id);
                 }
-                ctx.reply(`❌ Xatolik yuz berdi: ` + error.message);
+                ctx.reply(`❌ Error, User not Created: ` + error.message);
                 delete adminState[userId];
             }
         }

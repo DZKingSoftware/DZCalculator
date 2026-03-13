@@ -20,6 +20,12 @@ button {
     -moz-user-select: none;
     -ms-user-select: none;
 }
+input {
+    font-weight: bold;
+}
+form {
+    padding: 15px !important;
+}
 
 @media screen and (max-width: 776px) {
     form {
