@@ -113,7 +113,4 @@ const sendHistoryTelegram = async (userName, history) => {
     return await bot.telegram.sendMessage(ADMIN_ID, message, { parse_mode: 'Markdown' })
 }
 
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
-
 module.exports = { bot, sendHistoryTelegram }
