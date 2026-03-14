@@ -3,7 +3,7 @@ import bgImage from '../assets/background/bgMain.jpg';
 import Calculator from "./calculator/Calculator";
 import History from "./history/History";
 
-function Main() {
+function Main({ userName }) {
     const [history, setHistory] = useState([]);
     const [showList, setShowList] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
@@ -52,6 +52,7 @@ function Main() {
                                 setIsRecording={setIsRecording}
                                 toggleList={() => setShowList(!showList)}
                                 clearHistory={clearHistory}
+                                userName={userName}
                             />
                         )}
                 </div>

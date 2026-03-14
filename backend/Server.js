@@ -89,19 +89,19 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/send-history', async (req, res) => {
     try {
         const { history, userName } = req.body;
+        console.log("Kelgan ma'lumot:", { userName, historyLength: history?.length }); // Debug uchun
 
-        if (!history || history.length === 0) {
-            return res.status(400).json({ message: `History Tarixi Yo'q` });
-        };
+        if (!history || !Array.isArray(history) || history.length === 0) {
+            return res.status(400).json({ message: "Tarix ma'lumotlari xato yoki bo'sh" });
+        }
 
         await sendHistoryTelegram(userName, history);
-
-        res.json({ success: true, message: `Success, Send Message` })
+        res.json({ success: true, message: `Success, Send Message` });
     } catch (err) {
-        console.error('Xatolik: ', err);
-        res.status(500).json({ message: `Xatolik Yuz Berdi` })
+        console.error('Bot yuborishda xatolik:', err.message);
+        res.status(500).json({ message: `Telegramga yuborishda xato: ${err.message}` });
     }
-})
+});
 
 // Protsess tugaganda botni o'chirish
 process.once('SIGINT', () => {
@@ -122,7 +122,6 @@ mongoose.connect(MONGO_URL)
 
             try {
                 // Avval ishlayotgan bo'lsa to'xtatamiz (xavfsizlik uchun)
-                if (bot && bot.stop) await bot.stop(); 
                 
                 // Keyin yangidan yoqamiz
                 bot.launch()
@@ -135,7 +134,7 @@ mongoose.connect(MONGO_URL)
                         }
                     });
             } catch (e) {
-                console.log("Botni yoqishda muammo");
+                console.log("Botni yoqishda muammo", e);
             }
         });
     })

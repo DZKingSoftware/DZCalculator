@@ -2,17 +2,27 @@ import React from "react";
 import axios from 'axios'
 import { FaXmark } from "react-icons/fa6";
 import './history.css';
+// https://dzcalculator-production.up.railway.app
 
-function History({ total, history, isRecording, setIsRecording, toggleList, clearHistory }) {
+function History({ total, history, isRecording, setIsRecording, toggleList, clearHistory, userName }) {
     const sendTelegram = async () => {
+        if (!history || history.length === 0) {
+            console.log('Tarixi Yoq')
+            return
+        }
         try {
+            const formattedHistory = history.map((item) => ({
+                action: item.operation,
+                result: item.res
+            }));
+
             const response = await axios.post('https://dzcalculator-production.up.railway.app/api/send-history', {
-                history: history,
+                history: formattedHistory,
                 userName: userName
             });
 
             if (response.data.success) {
-                console.log('Success')
+                console.log('Yuborildi')
             }
         } catch (err) {
             console.error('Xatolik: ', err);
@@ -61,9 +71,9 @@ function History({ total, history, isRecording, setIsRecording, toggleList, clea
                         <span className="md:text-xl text-sm font-bold">{total}</span>
                     </div>
                     <div className="flex gap-2 items-center">
-                        <button
+                        {/* <button
                         onClick={() => sendTelegram(history)}
-                        >Send</button>
+                        >Send</button> */}
                         <button
                             onClick={clearHistory}
                             className="border-2 border-red-500 rounded-2xl text-red-500 hover:bg-red-500 hover:text-white"

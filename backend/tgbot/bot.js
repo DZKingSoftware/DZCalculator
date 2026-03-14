@@ -71,7 +71,6 @@ bot.on('text', async (ctx) => {
             const waitingMsg = await ctx.reply(`⏳ Login Parol Olinmoqda...`);
 
             try {
-                // BACKEND_URL endi aniq e'lon qilingan
                 const response = await axios.post(`${BACKEND_URL}/api/admin/create-user`, {
                     name: name,
                     maxDevices: devices
@@ -79,21 +78,28 @@ bot.on('text', async (ctx) => {
 
                 const { loginToken, passwordToken } = response.data;
 
+                // Xavfsiz o'chirish
                 if (waitingMsg) {
-                    await bot.telegram.deleteMessage(ctx.chat.id, waitingMsg.message_id);
+                    try {
+                        await bot.telegram.deleteMessage(ctx.chat.id, waitingMsg.message_id);
+                    } catch (err) { console.log("Xabar topilmadi"); }
                 }
 
                 const resultText = `✅ *Success User Created\\!* \n\n` +
                                    `👤 *User:* ${name.replace(/-/g, '\\-')} \n` +
                                    `🔑 *Login:* \`${loginToken}\` \n` +
                                    `🔐 *Password:* \`${passwordToken}\` \n` +
-                                   `📱 *Devices Limit:* ${devices} \n\n` +
+                                   `📱 *Devices Limit:* ${devices} \n\n`;
 
                 await ctx.replyWithMarkdownV2(resultText);
                 delete adminState[userId]; 
+
             } catch (error) {
+                // BU YERDA HAM XAVFSIZ O'CHIRISH KERAK
                 if (waitingMsg) {
-                    await bot.telegram.deleteMessage(ctx.chat.id, waitingMsg.message_id);
+                    try {
+                        await bot.telegram.deleteMessage(ctx.chat.id, waitingMsg.message_id);
+                    } catch (err) { console.log("Xabar topilmadi"); }
                 }
                 ctx.reply(`❌ Error, User not Created: ` + error.message);
                 delete adminState[userId];

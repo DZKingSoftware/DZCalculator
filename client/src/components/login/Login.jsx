@@ -45,6 +45,7 @@ function Login({ onLogin }) {
             if (response.data.success) {
                 setSuccess(`Login in Success`);
                 setShowMsg(true);
+                onLogin(response.data.name)
 
                 localStorage.setItem("userName", response.data.name);
                 localStorage.setItem("isLoggedIn", 'true');
@@ -112,7 +113,7 @@ function Login({ onLogin }) {
                             placeholder="Username"
                         />
                         {inputValue.username && (
-                            <div className="text-red-500 text-lg font-bold text-shadow-xs text-shadow-black">Please Enter Login!</div>
+                            <div className="text-red-500 text-sm font-bold text-shadow-xs text-shadow-black">Please Enter Login!</div>
                         )}
                     </div>
 
@@ -131,7 +132,7 @@ function Login({ onLogin }) {
                             placeholder="******"
                         />
                         {inputValue.password && (
-                            <div className="text-red-500 text-lg font-bold text-shadow-xs text-shadow-black">Please Enter Password</div>
+                            <div className="text-red-500 text-sm font-bold text-shadow-xs text-shadow-black">Please Enter Password</div>
                         )}
                     </div>
 
