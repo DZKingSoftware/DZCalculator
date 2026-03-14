@@ -1,8 +1,24 @@
 import React from "react";
+import axios from 'axios'
 import { FaXmark } from "react-icons/fa6";
 import './history.css';
 
 function History({ total, history, isRecording, setIsRecording, toggleList, clearHistory }) {
+    const sendTelegram = async () => {
+        try {
+            const response = await axios.post('https://dzcalculator-production.up.railway.app/api/send-history', {
+                history: history,
+                userName: userName
+            });
+
+            if (response.data.success) {
+                console.log('Success')
+            }
+        } catch (err) {
+            console.error('Xatolik: ', err);
+        }
+    }
+
     return (
         <div className="bg-black/20 w-full h-screen flex justify-center items-center fixed inset-0 z-[100] backdrop-blur-sm" style={{ padding: '10px' }}>
             <div className="relative bg-green-800/60 md:w-lg w-full md:max-h-170 md:h-170 h-110 min-h-70 flex flex-col overflow-hidden rounded-md" style={{ padding: '10px' }}>
@@ -45,6 +61,9 @@ function History({ total, history, isRecording, setIsRecording, toggleList, clea
                         <span className="md:text-xl text-sm font-bold">{total}</span>
                     </div>
                     <div className="flex gap-2 items-center">
+                        <button
+                        onClick={() => sendTelegram(history)}
+                        >Send</button>
                         <button
                             onClick={clearHistory}
                             className="border-2 border-red-500 rounded-2xl text-red-500 hover:bg-red-500 hover:text-white"

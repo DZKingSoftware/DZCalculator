@@ -6,6 +6,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const User = require('./moduls/Users');
+const { bot, sendHistoryTelegram } = require('./tgbot/bot');
 const app = express();
 
 // Middleware
@@ -20,11 +21,6 @@ app.use(cors({
 const PORT = process.env.PORT || 5000;
 const MONGO_URL = process.env.MONGO_URL;
 const JWT_SECRET = process.env.JWT_SECRET;
-
-// MongoDB Connection
-mongoose.connect(MONGO_URL)
-    .then(() => console.log('✅ Mongo-DB Connected'))
-    .catch((err) => console.log('❌ MongoDB Error', err));
 
 // --- API ROUTES ---
 
@@ -90,14 +86,33 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// Telegram Botni ishga tushirish (bot.js fayli mavjud bo'lsa)
-try {
-    require('./tgbot/bot'); 
-} catch (e) {
-    console.log("⚠️ Bot fayli topilmadi, faqat API ishga tushmoqda.");
-}
+app.post('/api/send-history', async (req, res) => {
+    try {
+        const { history, userName } = req.body;
 
-// Serverni tinglash
-app.listen(PORT, "0.0.0.0", () => {
-    console.log(`🚀 Server ${PORT}-portda ishga tushdi`);
-});
+        if (!history || history.length === 0) {
+            return res.status(400).json({ message: `History Tarixi Yo'q` });
+        };
+
+        await sendHistoryTelegram(userName, history);
+
+        res.json({ success: true, message: `Success, Send Message` })
+    } catch (err) {
+        console.error('Xatolik: ', err);
+        res.status(500).json({ message: `Xatolik Yuz Berdi` })
+    }
+})
+
+// MongoDB Connection
+mongoose.connect(MONGO_URL)
+    .then(() => {
+        console.log('✅ Mongo-DB Connected');
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`🚀 Server ${PORT}-portda ishga tushdi`);
+
+            bot.launch()
+                .then(() => console.log('🤖 Bot ishga tushdi'))
+                .catch(err => console.error('❌ Botda xato:', err))
+        })
+    })
+    .catch(err => console.error('❌ MongoDB Connection Error:', err));

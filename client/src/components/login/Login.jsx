@@ -13,6 +13,7 @@ function Login({ onLogin }) {
     const [success, setSuccess] = useState('');
     const [showMsg, setShowMsg] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [inputValue, setInputValue] = useState({ username: false, password: false });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,6 +21,17 @@ function Login({ onLogin }) {
         setError('');
         setSuccess('');
         setShowMsg(false);
+
+        const valueInput = {
+            username: !username,
+            password: !password
+        }
+
+        setInputValue(valueInput);
+
+        if (valueInput.username || valueInput.password) {
+            return;
+        }
 
         try {
             const deviceId = await getDeviceId();
@@ -92,13 +104,16 @@ function Login({ onLogin }) {
                         <input
                             type="text"
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => {setUsername(e.target.value), setInputValue(prev => ({ ...prev, username: false }))}}
                             className="text-green-500 text-lg bg-black w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             style={{
                                 padding: '5px 10px',
                             }}
                             placeholder="Username"
                         />
+                        {inputValue.username && (
+                            <div className="text-red-500 text-lg font-bold text-shadow-xs text-shadow-black">Please Enter Login!</div>
+                        )}
                     </div>
 
                     <div>
@@ -108,19 +123,21 @@ function Login({ onLogin }) {
                         <input
                             type="password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => {setPassword(e.target.value), setInputValue(prev => ({ ...prev, password: false }))}}
                             className="text-green-500 bg-black text-lg focus:outline-none focus:ring-2 focus:ring-green-500 w-full rounded-lg"
                             style={{
                                 padding: '5px 10px'
                             }}
                             placeholder="******"
-                            required
                         />
+                        {inputValue.password && (
+                            <div className="text-red-500 text-lg font-bold text-shadow-xs text-shadow-black">Please Enter Password</div>
+                        )}
                     </div>
 
                     <button
                         type="submit"
-                        className="bg-green-500/70 border-none rounded-xl w-full cursor-pointer text-white font-bold active:scale-1 no-copy"
+                        className="bg-green-500/70 border-none rounded-xl w-full cursor-pointer text-white font-bold active:scale-90 no-copy"
                         style={{
                             margin: '20px 0 0 0',
                             padding: '7px',
