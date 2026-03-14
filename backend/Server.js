@@ -103,16 +103,40 @@ app.post('/api/send-history', async (req, res) => {
     }
 })
 
-// MongoDB Connection
+// Protsess tugaganda botni o'chirish
+process.once('SIGINT', () => {
+    bot.stop('SIGINT');
+    process.exit(0);
+});
+process.once('SIGTERM', () => {
+    bot.stop('SIGTERM');
+    process.exit(0);
+});
+
+// server.js ning oxirgi qismi
 mongoose.connect(MONGO_URL)
     .then(() => {
         console.log('✅ Mongo-DB Connected');
-        app.listen(PORT, '0.0.0.0', () => {
+        app.listen(PORT, '0.0.0.0', async () => { // async qo'shdik
             console.log(`🚀 Server ${PORT}-portda ishga tushdi`);
 
-            bot.launch()
-                .then(() => console.log('🤖 Bot ishga tushdi'))
-                .catch(err => console.error('❌ Botda xato:', err))
-        })
+            try {
+                // Avval ishlayotgan bo'lsa to'xtatamiz (xavfsizlik uchun)
+                if (bot && bot.stop) await bot.stop(); 
+                
+                // Keyin yangidan yoqamiz
+                bot.launch()
+                    .then(() => console.log('🤖 Bot ishga tushdi'))
+                    .catch(err => {
+                        if (err.response && err.response.error_code === 409) {
+                            console.log('⚠️ Botda conflict: Qayta urinish...');
+                        } else {
+                            console.error('❌ Botda xato:', err);
+                        }
+                    });
+            } catch (e) {
+                console.log("Botni yoqishda muammo");
+            }
+        });
     })
     .catch(err => console.error('❌ MongoDB Connection Error:', err));
