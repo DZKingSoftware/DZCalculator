@@ -52,7 +52,6 @@ function Main({ userName }) {
                                 setIsRecording={setIsRecording}
                                 toggleList={() => setShowList(!showList)}
                                 clearHistory={clearHistory}
-                                userName={userName}
                             />
                         )}
                 </div>

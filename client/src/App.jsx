@@ -64,7 +64,7 @@ function App() {
       <div className="w-full">
         <Routes>
           <Route path='/login' element={isLogin ? (<Navigate to='/' replace />) : (<Login onLogin={handleLogin} />)} />
-          <Route path='/' element={isLogin ? (<Main userName={userName} />) : (<Navigate to='/login' />)} />
+          <Route path='/' element={isLogin ? (<Main />) : (<Navigate to='/login' />)} />
           <Route path='*' element={<Navigate to='/login' replace />} />
         </Routes>
       </div>

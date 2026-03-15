@@ -5,7 +5,6 @@ import './history.css';
 // https://dzcalculator-production.up.railway.app
 
 function History({ total, history, isRecording, setIsRecording, toggleList, clearHistory }) {
-
     return (
         <div className="bg-black/20 w-full h-screen flex justify-center items-center fixed inset-0 z-[100] backdrop-blur-sm" style={{ padding: '10px' }}>
             <div className="relative bg-green-800/60 md:w-lg w-full md:max-h-170 md:h-170 h-110 min-h-70 flex flex-col overflow-hidden rounded-md" style={{ padding: '10px' }}>
