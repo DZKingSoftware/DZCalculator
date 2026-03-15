@@ -47,7 +47,9 @@ function Login({ onLogin }) {
                 setSuccess(`Login in Success`);
                 setShowMsg(true);
 
+                localStorage.setItem("token", response.data.token); 
                 localStorage.setItem("userName", response.data.name);
+                localStorage.setItem("expiresAt", response.data.expiresAt);
                 localStorage.setItem("isLoggedIn", 'true');
 
                 setTimeout(() => {

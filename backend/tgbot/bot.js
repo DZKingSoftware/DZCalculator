@@ -119,13 +119,4 @@ bot.on('text', async (ctx) => {
     }
 });
 
-const sendHistoryTelegram = async (userName, history) => {
-    let message = `*${userName}, Hisoblar Tarixi:*\n\n`;
-    history.forEach((item, index) => {
-        message += `${index + 1}. *Amal:* ${item.action}\n`;
-        message += `   ✅ *Natija:* ${item.result}\n\n`;
-    });
-    return await bot.telegram.sendMessage(ADMIN_ID, message, { parse_mode: 'Markdown' });
-}
-
-module.exports = { bot, sendHistoryTelegram };
+module.exports = { bot };
