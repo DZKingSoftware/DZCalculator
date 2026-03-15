@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 require('dotenv').config();
 
-app.use(express.json());
+const app = express();
+
 app.use(cors({
     origin: 'https://dz-calculator.netlify.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -15,8 +16,8 @@ app.use(cors({
 
 const User = require('./moduls/Users');
 const { bot } = require('./tgbot/bot');
-const app = express();
 
+app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URL = process.env.MONGO_URL;
