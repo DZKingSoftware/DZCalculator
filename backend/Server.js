@@ -52,6 +52,7 @@ app.post('/api/admin/create-user', async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
+    console.log(`Login So'rovi keldi`)
     try {
         const { loginToken, passwordToken, deviceId } = req.body;
 
@@ -59,11 +60,14 @@ app.post('/api/login', async (req, res) => {
             return res.status(400).json({ message: 'Bunday Qurulma Yoq' });
         }
 
+        console.log(`Bazadan Qidirilmoqda`);
         const user = await User.findOne({ loginToken, passwordToken });
         if (!user) {
+            console.log(`foydalanuvchi topilmadi`)
             return res.status(401).json({ message: `Login or Password is Incorrect` });
         }
 
+        console.log(`foydalanuvchi topildi`)
         const isAlreadyRegistered = user.usedDevices.includes(deviceId);
 
         if (!isAlreadyRegistered) {
@@ -112,4 +116,8 @@ app.listen(PORT, '0.0.0.0', () => {
                 .catch(err => console.error('❌ Botda xato:', err));
         })
         .catch(err => console.error('❌ MongoDB Connection Error:', err))
-})
+});
+
+app.get('/', (req, res) => {
+    res.status(200).send('DZ Calculator Backend is Running...');
+});
