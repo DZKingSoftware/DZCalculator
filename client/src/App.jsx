@@ -25,7 +25,7 @@ function App() {
 
       if (token && expiresAt) {
         const now = new Date().getTime();
-        const expiryTime = new Date(expiresAt).getTime();
+        const expiryTime = new Date(expiresAt).getTime() + 2000;
 
         if (now >= expiryTime) {
           console.warn("Vaqt Tugadi...");
@@ -37,7 +37,7 @@ function App() {
 
     checkTokenExpiry();
 
-    const interval = setInterval(checkTokenExpiry, 30000);
+    const interval = setInterval(checkTokenExpiry, 10000);
 
     return () => clearInterval(interval);
   }, [isLogin])

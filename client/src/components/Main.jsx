@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import bgImage from '../assets/background/bgMain.jpg';
 import Calculator from "./calculator/Calculator";
 import History from "./history/History";
+import TimerDisplay from "./timer/timer";
 
-function Main({ userName }) {
+function Main() {
     const [history, setHistory] = useState([]);
     const [showList, setShowList] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
@@ -38,6 +39,9 @@ function Main({ userName }) {
                         backgroundColor: '#00000034',
                         backdropFilter: 'blur(40px)'
                     }}>
+                        <div className="bg-green-400 fixed z-[102] text-lg font-bold text-white top-10 left-10 rounded-lg" style={{ padding: '10px' }}>
+                            <TimerDisplay />
+                        </div>
                         <Calculator 
                             addToHistory={addToHistory}
                             toggleList={() => setShowList(!showList)}

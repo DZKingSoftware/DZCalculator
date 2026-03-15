@@ -8,7 +8,8 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({
-    origin: 'https://dz-calculator.netlify.app',
+    // origin: 'https://dz-calculator.netlify.app',
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true

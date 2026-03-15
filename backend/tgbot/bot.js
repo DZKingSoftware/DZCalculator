@@ -62,7 +62,7 @@ bot.on('text', async (ctx) => {
         if (state.step === 'ASK_NAME') {
             adminState[userId].name = text;
             adminState[userId].step = 'ASK_DEVICES';
-            return ctx.reply(`👤 ${text} \n📱 Qurulmalar Limitini Kiriting: `);
+            return ctx.reply(`📱 Qurulmalar Limitini Kiriting: `);
         }
 
         if (state.step === 'ASK_DEVICES') {
