@@ -37,7 +37,7 @@ function App() {
 
     checkTokenExpiry();
 
-    const interval = setTimeout(checkTokenExpiry, 30000);
+    const interval = setInterval(checkTokenExpiry, 30000);
 
     return () => clearInterval(interval);
   }, [isLogin])

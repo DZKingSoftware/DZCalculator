@@ -91,7 +91,7 @@ bot.on('text', async (ctx) => {
                 });
 
                 const { loginToken, passwordToken, expiresAt } = response.data;
-                const dateText = new Date(expiresAt).toLocaleString('uz-UZ');
+                const dateText = new Date(expiresAt).toLocaleString('uz-UZ', { timeZone: 'Asia/Tashkent' });
 
                 if (waitingMsg) {
                     try { await bot.telegram.deleteMessage(ctx.chat.id, waitingMsg.message_id); } catch (e) {}
