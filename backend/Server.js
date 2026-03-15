@@ -80,7 +80,8 @@ app.post('/api/login', async (req, res) => {
         res.json({
             success: true,
             name: user.name,
-            token: token
+            token: token,
+            expiresAt: user.expiresAt
         });
     } catch (error) {
         res.status(500).json({ message: 'Error, Please try Again: ', error: error.message });
