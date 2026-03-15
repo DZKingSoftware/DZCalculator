@@ -25,19 +25,24 @@ const JWT_SECRET = process.env.JWT_SECRET;
 app.post('/api/admin/create-user', async (req, res) => {
     try {
         const { name, maxDevices } = req.body;
+
         const loginToken = crypto.randomBytes(4).toString('hex');
         const passwordToken = crypto.randomBytes(4).toString('hex');
+
+        const expirationDate = new Date();
+        expirationDate.setMinutes(expirationDate.getMinutes() + Number(durationMinutes));
 
         const newUser = new User({
             name,
             loginToken,
             passwordToken,
             maxDevices: Number(maxDevices || 1),
-            usedDevices: []
+            usedDevices: [],
+            expiresAt: expirationDate
         });
 
         await newUser.save();
-        res.status(201).json({ name, loginToken, passwordToken, maxDevices: newUser.maxDevices });
+        res.status(201).json({ name, loginToken, passwordToken, maxDevices: newUser.maxDevices, expiresAt: expirationDate });
     } catch (error) {
         res.status(500).json({ message: 'Serverda Xatolik!', error: error.message });
     }

@@ -7,7 +7,7 @@ import './App.css'
 
 function App() {
   const [isLogin, setIsLogin] = useState(() => {
-    // return localStorage.getItem('isLogin') === 'true';
+    return !!localStorage.getItem('token')
   });
   const [userName, setUserName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -15,8 +15,31 @@ function App() {
 
   const handleLogin = () => {
     setIsLogin(true);
-    // localStorage.setItem('isLogin', 'true')
   };
+
+  useEffect(() => {
+    const checkTokenExpiry = () => {
+      const expiresAt = localStorage.getItem('expiresAt');
+      const token = localStorage.getItem('token');
+
+      if (token && expiresAt) {
+        const now = new Date().getTime();
+        const expiryTime = new Date(expiresAt).getTime();
+
+        if (now >= expiryTime) {
+          console.warn("Vaqt Tugadi...");
+          localStorage.clear();
+          setIsLogin(false);
+        }
+      }
+    };
+
+    checkTokenExpiry();
+
+    const interval = setTimeout(checkTokenExpiry, 30000);
+
+    return () => clearInterval(interval);
+  }, [isLogin])
 
   useEffect(() => {
     const handleLoad = () => {
@@ -31,7 +54,7 @@ function App() {
     }
   }, []);
 
-  if(isLoading) {
+  if (isLoading) {
     return <Spinner isFadeOut={isFadeOut} />;
   }
 
