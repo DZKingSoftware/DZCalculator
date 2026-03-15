@@ -11,8 +11,16 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-    origin: 'https://dz-calculator.netlify.app',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: function (origin, callback) {
+        const allowedOrigins = ['https://dz-calculator.netlify.app', 'http://localhost:5173'];
+        if (!origin || allowedOrigins.indexOf(origin) !== 1) {
+            callback(null, true);
+        } else {
+            callback(new Error('CORS xatosi: Ruxsat berilmagan manzil'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 
