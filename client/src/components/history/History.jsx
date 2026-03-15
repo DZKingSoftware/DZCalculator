@@ -4,30 +4,7 @@ import { FaXmark } from "react-icons/fa6";
 import './history.css';
 // https://dzcalculator-production.up.railway.app
 
-function History({ total, history, isRecording, setIsRecording, toggleList, clearHistory, userName }) {
-    // const sendTelegram = async () => {
-    //     if (!history || history.length === 0) {
-    //         console.log('Tarixi Yoq')
-    //         return
-    //     }
-    //     try {
-    //         const formattedHistory = history.map((item) => ({
-    //             action: item.operation,
-    //             result: item.res
-    //         }));
-
-    //         const response = await axios.post('https://dzcalculator-production.up.railway.app/api/send-history', {
-    //             history: formattedHistory,
-    //             userName: userName
-    //         });
-
-    //         if (response.data.success) {
-    //             console.log('Yuborildi')
-    //         }
-    //     } catch (err) {
-    //         console.error('Xatolik: ', err);
-    //     }
-    // }
+function History({ total, history, isRecording, setIsRecording, toggleList, clearHistory }) {
 
     return (
         <div className="bg-black/20 w-full h-screen flex justify-center items-center fixed inset-0 z-[100] backdrop-blur-sm" style={{ padding: '10px' }}>

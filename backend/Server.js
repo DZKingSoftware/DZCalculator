@@ -82,23 +82,6 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-app.post('/api/send-history', async (req, res) => {
-    try {
-        const { history, userName } = req.body;
-        console.log("Kelgan ma'lumot:", { userName, historyLength: history?.length }); // Debug uchun
-
-        if (!history || !Array.isArray(history) || history.length === 0) {
-            return res.status(400).json({ message: "Tarix ma'lumotlari xato yoki bo'sh" });
-        }
-
-        await sendHistoryTelegram(userName, history);
-        res.json({ success: true, message: `Success, Send Message` });
-    } catch (err) {
-        console.error('Bot yuborishda xatolik:', err.message);
-        res.status(500).json({ message: `Telegramga yuborishda xato: ${err.message}` });
-    }
-});
-
 process.once('SIGINT', () => {
     bot.stop('SIGINT');
     process.exit(0);

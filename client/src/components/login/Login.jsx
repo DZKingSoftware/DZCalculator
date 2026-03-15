@@ -45,7 +45,6 @@ function Login({ onLogin }) {
             if (response.data.success) {
                 setSuccess(`Login in Success`);
                 setShowMsg(true);
-                onLogin(response.data.name);
 
                 localStorage.setItem("userName", response.data.name);
                 localStorage.setItem("isLoggedIn", 'true');
