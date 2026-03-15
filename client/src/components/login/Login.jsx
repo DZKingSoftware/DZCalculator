@@ -21,7 +21,7 @@ function Login({ onLogin }) {
         setError('');
         setSuccess('');
         setShowMsg(false);
-        isLoading(true)
+        setIsLoading(true)
 
         const valueInput = {
             username: !username.trim(),
