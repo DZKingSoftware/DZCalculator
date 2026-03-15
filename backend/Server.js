@@ -24,7 +24,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 app.post('/api/admin/create-user', async (req, res) => {
     try {
-        const { name, maxDevices } = req.body;
+        const { name, maxDevices, durationMinutes } = req.body;
 
         const loginToken = crypto.randomBytes(4).toString('hex');
         const passwordToken = crypto.randomBytes(4).toString('hex');
