@@ -9,7 +9,6 @@ const User = require('./moduls/Users');
 const { bot, sendHistoryTelegram } = require('./tgbot/bot');
 const app = express();
 
-// Middleware
 app.use(express.json());
 app.use(cors({
     origin: 'https://dz-calculator.netlify.app',
@@ -17,14 +16,12 @@ app.use(cors({
     credentials: true
 }));
 
-// Environment Variables
 const PORT = process.env.PORT || 5000;
 const MONGO_URL = process.env.MONGO_URL;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // --- API ROUTES ---
 
-// Admin: Foydalanuvchi yaratish (Bot orqali chaqiriladi)
 app.post('/api/admin/create-user', async (req, res) => {
     try {
         const { name, maxDevices } = req.body;
@@ -46,7 +43,6 @@ app.post('/api/admin/create-user', async (req, res) => {
     }
 });
 
-// Login: Foydalanuvchi kirishi
 app.post('/api/login', async (req, res) => {
     try {
         const { loginToken, passwordToken, deviceId } = req.body;
@@ -103,7 +99,6 @@ app.post('/api/send-history', async (req, res) => {
     }
 });
 
-// Protsess tugaganda botni o'chirish
 process.once('SIGINT', () => {
     bot.stop('SIGINT');
     process.exit(0);
@@ -121,9 +116,6 @@ mongoose.connect(MONGO_URL)
             console.log(`🚀 Server ${PORT}-portda ishga tushdi`);
 
             try {
-                // Avval ishlayotgan bo'lsa to'xtatamiz (xavfsizlik uchun)
-                
-                // Keyin yangidan yoqamiz
                 bot.launch()
                     .then(() => console.log('🤖 Bot ishga tushdi'))
                     .catch(err => {
