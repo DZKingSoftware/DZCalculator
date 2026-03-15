@@ -13,7 +13,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isFadeOut, setIsFadeOut] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = (name) => {
+    setUserName(name)
     setIsLogin(true);
   };
 
