@@ -21,10 +21,11 @@ function Login({ onLogin }) {
         setError('');
         setSuccess('');
         setShowMsg(false);
+        isLoading(true)
 
         const valueInput = {
-            username: !username,
-            password: !password
+            username: !username.trim(),
+            password: !password.trim()
         }
 
         setInputValue(valueInput);
@@ -37,8 +38,8 @@ function Login({ onLogin }) {
             const deviceId = await getDeviceId();
 
             const response = await axios.post('https://dzcalculator-production.up.railway.app/api/login', {
-                loginToken: username,
-                passwordToken: password,
+                loginToken: username.trim(),
+                passwordToken: password.trim(),
                 deviceId: deviceId
             });
 
@@ -50,7 +51,7 @@ function Login({ onLogin }) {
                 localStorage.setItem("isLoggedIn", 'true');
 
                 setTimeout(() => {
-                    onLogin();
+                    onLogin(response.data.name);
                 }, 2000)
             }
         } catch (error) {
