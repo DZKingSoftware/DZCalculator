@@ -31,7 +31,7 @@ bot.hears('Login Parol Olish', async (ctx) => {
         return ctx.reply('👤 Foydalanuvchi Ismini Kiriting: ');
     }
 
-    await bot.telegram.sendMessage(ADMIN_ID, `Yangi So'rov!\n Kimdan: ${ctx.from.first_name}\n ID: ${ctx.from.username}\n Login va Parol Olmoqchi.`);
+    await bot.telegram.sendMessage(ADMIN_ID, `Yangi So'rov!\n Kimdan: ${ctx.from.first_name}\n ID: ${ctx.from.id}\n Login va Parol Olmoqchi.`);
     ctx.reply(`So'rovingiz Muvofoqiyatli Yuborildi.`);
 });
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-function TimerDisplay() {
-    const [timer, setTimer] = useState('');
+function TimerDisplay({ setIsTimer }) {
+    const [Timer, setTimer] = useState('');
     const [isExpiring, setIsExpiring] = useState(false);
 
     useEffect(() => {
@@ -12,7 +12,6 @@ function TimerDisplay() {
             const now = new Date().getTime();
             const expiration = new Date(expiryDate).getTime();
             const distance = expiration - now;
-
             if (distance <= 0) {
                 clearInterval(timer);
                 setTimer('00:00:00');
@@ -28,6 +27,8 @@ function TimerDisplay() {
 
                 const f = (n) => n < 10 ? `0${n}` : n;
                 setTimer(`${f(h)}:${f(m)}:${f(s)}`);
+
+                setIsTimer(Timer);
             }
         }, 1000);
 
@@ -35,7 +36,7 @@ function TimerDisplay() {
     }, [])
 
     return (
-        <div>{timer || `00:00:00`}</div>
+        <div className={`${Timer <= "00:00" ? "text-black" : "text-white"}`}>{Timer || `00:00:00`}</div>
     )
 }
 

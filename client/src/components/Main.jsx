@@ -3,11 +3,13 @@ import bgImage from '../assets/background/bgMain.jpg';
 import Calculator from "./calculator/Calculator";
 import History from "./history/History";
 import TimerDisplay from "./timer/timer";
+import './Main.css'
 
 function Main() {
     const [history, setHistory] = useState([]);
     const [showList, setShowList] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
+    const [isTimer, setIsTimer] = useState('');
 
     const addToHistory = (a, b, op, res) => {
         if (isRecording !== 'Error') {
@@ -39,8 +41,12 @@ function Main() {
                         backgroundColor: '#00000034',
                         backdropFilter: 'blur(40px)'
                     }}>
-                        <div className="bg-green-400 fixed z-[102] text-lg font-bold text-white top-10 left-10 rounded-lg" style={{ padding: '10px' }}>
-                            <TimerDisplay />
+                        <div 
+                            className={`fixed z-[102] md:w-[100px] w-fit text-center md:text-lg text-sm font-bold top-10 left-10 rounded-lg
+                            ${isTimer <= '00:00:59' ? 'bg-red-400' : 'bg-green-400'}`}
+                            style={{ padding: '10px' }}
+                            >
+                            <TimerDisplay setIsTimer={setIsTimer} />
                         </div>
                         <Calculator 
                             addToHistory={addToHistory}
