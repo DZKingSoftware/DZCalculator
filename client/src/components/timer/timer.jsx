@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 
 function TimerDisplay({ setIsTimer }) {
-    const [Timer, setTimer] = useState('');
+    const [timer, setTimer] = useState('');
     const [isExpiring, setIsExpiring] = useState(false);
 
     useEffect(() => {
         const expiryDate = localStorage.getItem('expiresAt');
         if (!expiryDate) return;
 
-        const timer = setInterval(() => {
+        const intervalId = setInterval(() => {
             const now = new Date().getTime();
             const expiration = new Date(expiryDate).getTime();
             const distance = expiration - now;
+
             if (distance <= 0) {
                 clearInterval(timer);
                 setTimer('00:00:00');
@@ -26,17 +27,22 @@ function TimerDisplay({ setIsTimer }) {
                 const s = Math.floor((distance % (1000 * 60)) / 1000);
 
                 const f = (n) => n < 10 ? `0${n}` : n;
-                setTimer(`${f(h)}:${f(m)}:${f(s)}`);
+                const alarm = `${f(h)}:${f(m)}:${f(s)}`;
 
-                setIsTimer(Timer);
+                setTimer(alarm)
+
+                if (setIsTimer) {
+                    setIsTimer(alarm)
+                }
             }
         }, 1000);
 
-        return () => clearInterval(timer);
-    }, [])
+        return () => clearInterval(intervalId);
+    }, []);
+
 
     return (
-        <div className={`${Timer <= "00:00" ? "text-black" : "text-white"}`}>{Timer || `00:00:00`}</div>
+        <div className={`${timer <= "00:00:59" ? "text-black" : "text-white"}`}>{timer || `00:00:00`}</div>
     )
 }
 

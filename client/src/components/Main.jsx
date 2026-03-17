@@ -43,7 +43,7 @@ function Main() {
                     }}>
                         <div 
                             className={`fixed z-[102] md:w-[100px] w-fit text-center md:text-lg text-sm font-bold top-10 left-10 rounded-lg
-                            ${isTimer <= '00:00:59' ? 'bg-red-400' : 'bg-green-400'}`}
+                            ${isTimer <= "00:00:59" ? 'bg-red-400' : 'bg-green-400'}`}
                             style={{ padding: '10px' }}
                             >
                             <TimerDisplay setIsTimer={setIsTimer} />
