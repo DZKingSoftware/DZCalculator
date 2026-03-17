@@ -18,8 +18,6 @@ function App() {
     setIsLogin(true);
   };
 
-  // setIsLogin(true);
-
   useEffect(() => {
     const checkTokenExpiry = () => {
       const expiresAt = localStorage.getItem('expiresAt');
@@ -65,10 +63,9 @@ function App() {
     <Router>
       <div className="w-full">
         <Routes>
-          {/* <Route path='/login' element={isLogin ? (<Navigate to='/' replace />) : (<Login onLogin={handleLogin} />)} />
+          <Route path='/login' element={isLogin ? (<Navigate to='/' replace />) : (<Login onLogin={handleLogin} />)} />
           <Route path='/' element={isLogin ? (<Main />) : (<Navigate to='/login' />)} />
-          <Route path='*' element={<Navigate to='/login' replace />} /> */}
-          <Route path='/' element={<Main />} />
+          <Route path='*' element={<Navigate to='/login' replace />} />
         </Routes>
       </div>
     </Router>
