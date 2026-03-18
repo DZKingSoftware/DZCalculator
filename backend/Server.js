@@ -32,20 +32,18 @@ app.post('/api/admin/create-user', async (req, res) => {
         const loginToken = crypto.randomBytes(4).toString('hex');
         const passwordToken = crypto.randomBytes(4).toString('hex');
 
-        const expirationDate = new Date();
-        expirationDate.setMinutes(expirationDate.getMinutes() + Number(durationMinutes));
-
         const newUser = new User({
             name,
             loginToken,
             passwordToken,
             maxDevices: Number(maxDevices || 1),
             usedDevices: [],
-            expiresAt: expirationDate
+            durationMinutes: Number(durationMinutes),
+            expiresAt: null
         });
 
         await newUser.save();
-        res.status(201).json({ name, loginToken, passwordToken, maxDevices: newUser.maxDevices, expiresAt: expirationDate });
+        res.status(201).json({ name, loginToken, passwordToken, maxDevices: newUser.maxDevices, status: 'Waiting for First Login' });
     } catch (error) {
         res.status(500).json({ message: 'Serverda Xatolik!', error: error.message });
     }
@@ -60,14 +58,22 @@ app.post('/api/login', async (req, res) => {
             return res.status(400).json({ message: 'Bunday Qurulma Yoq' });
         }
 
-        console.log(`Bazadan Qidirilmoqda`);
         const user = await User.findOne({ loginToken, passwordToken });
         if (!user) {
-            console.log(`foydalanuvchi topilmadi`)
             return res.status(401).json({ message: `Login or Password is Incorrect` });
         }
 
-        console.log(`foydalanuvchi topildi`)
+        if (!user.expiresAt) {
+            const now = new Date();
+            const expirationDate = new Date(now.getTime() + user.durationMinutes * 60000);
+
+            user.expiresAt = expirationDate;
+        } else {
+            if (new Date() > user.expiresAt) {
+                return res.status(403).json({ message: 'Vaqt Tugagan' })
+            }
+        }
+
         const isAlreadyRegistered = user.usedDevices.includes(deviceId);
 
         if (!isAlreadyRegistered) {

@@ -91,7 +91,7 @@ bot.on('text', async (ctx) => {
                 });
 
                 const { loginToken, passwordToken, expiresAt } = response.data;
-                const dateText = new Date(expiresAt).toLocaleString('uz-UZ', { timeZone: 'Asia/Tashkent' });
+                const durationText = `${duration}`
 
                 if (waitingMsg) {
                     try { await bot.telegram.deleteMessage(ctx.chat.id, waitingMsg.message_id); } catch (e) {}
@@ -102,7 +102,7 @@ bot.on('text', async (ctx) => {
                                    `🔑 *Login:* \`${loginToken}\` \n` +
                                    `🔐 *Password:* \`${passwordToken}\` \n` +
                                    `📱 *Devices:* ${devices} \n` +
-                                   `⏳ *Expires:* ${dateText.replace(/-/g, '\\-')} \n\n` +
+                                   `⏳ *Expires:*  ${durationText}\n` +
                                    `⚠️ _Vaqt tugagach, login avtomatik o'chadi\\._`;
 
                 await ctx.replyWithMarkdownV2(resultText);

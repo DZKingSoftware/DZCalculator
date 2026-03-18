@@ -6,7 +6,8 @@ const userSchema = new mongoose.Schema({
     passwordToken: String,
     maxDevices: Number,
     usedDevices: [String],
-    expiresAt: { type: Date, index: { expires: 0 } }
-}, { timestamps: true });
+    durationMinutes: Number,
+    expiresAt: { type: Date, default: null }
+});
 
 module.exports = mongoose.model('User', userSchema);
