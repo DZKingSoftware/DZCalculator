@@ -3,7 +3,8 @@ import bgImage from '../assets/background/bgMain.jpg';
 import Calculator from "./calculator/Calculator";
 import History from "./history/History";
 import TimerDisplay from "./timer/timer";
-import './Main.css'
+import timeUp from '../assets/icons/remove.png';
+import './Main.css';
 
 function Main() {
     const [history, setHistory] = useState([]);
@@ -41,6 +42,14 @@ function Main() {
                         backgroundColor: '#00000034',
                         backdropFilter: 'blur(40px)'
                     }}>
+                        {isTimer === '00:00:00' && (
+                            <div 
+                                className={`fixed ease-in-out bg-white z-[104] font-bold transition-all duration-500 border left-1/2 -translate-x-1/2 ${isTimer === '00:00:00' ? 'opacity-100 top-10' : 'opacity-0 -top-30'}`}
+                                style={{ padding: '7px 20px', borderRadius: '10px', }}
+                            >
+                                <div className="flex items-center">Your Time is Up <img src={timeUp} style={{ margin: '0 0 0 5px' }} width={25} alt="" /></div>
+                            </div>
+                        )}
                         <div 
                             className={`fixed z-[102] md:w-[100px] w-fit text-center md:text-lg text-sm font-bold top-10 left-10 rounded-lg
                             ${isTimer <= "00:00:59" ? 'bg-red-400' : 'bg-green-400'}`}

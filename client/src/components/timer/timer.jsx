@@ -20,7 +20,7 @@ function TimerDisplay({ setIsTimer }) {
 
                 setTimeout(() => {
                     window.location.reload();
-                }, 1500);
+                }, 1700);
             } else {
                 const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
