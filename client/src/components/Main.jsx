@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
 import bgImage from '../assets/background/bgMain.jpg';
 import Calculator from "./calculator/Calculator";
 import History from "./history/History";
@@ -49,7 +50,7 @@ function Main() {
                     <div className="flex items-center">Your Time is Up <img src={timeUp} style={{ margin: '0 0 0 5px' }} width={25} alt="" /></div>
                 </div>
                 <div
-                    className={`fixed z-[102] md:w-[100px] w-fit text-center md:text-lg text-sm font-bold top-10 left-10 rounded-lg
+                    className={`fixed z-[102] md:w-[100px] w-fit text-center md:text-lg text-sm font-bold md:top-10 md:left-10 top-5 left-5 rounded-lg
                             ${isTimer <= "00:00:59" ? 'bg-red-400' : 'bg-green-400'}`}
                     style={{ padding: '10px' }}
                 >
@@ -61,16 +62,25 @@ function Main() {
                     showList={showList}
                     isRecording={isRecording}
                 />
-                {showList && (
-                    <History
-                        history={history}
-                        total={total}
-                        isRecording={isRecording}
-                        setIsRecording={setIsRecording}
-                        toggleList={() => setShowList(!showList)}
-                        clearHistory={clearHistory}
-                    />
-                )}
+                <AnimatePresence mode="wait">
+                    {showList && (
+                        <motion.div
+                            className=""
+                            key='historyPanel'
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <History
+                                history={history}
+                                total={total}
+                                isRecording={isRecording}
+                                setIsRecording={setIsRecording}
+                                toggleList={() => setShowList(!showList)}
+                                clearHistory={clearHistory}
+                            />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     )

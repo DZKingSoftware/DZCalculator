@@ -1,13 +1,12 @@
 import React from "react";
-import axios from 'axios'
+import { motion } from "framer-motion";
 import { FaXmark } from "react-icons/fa6";
 import './history.css';
-// https://dzcalculator-production.up.railway.app
 
 function History({ total, history, isRecording, setIsRecording, toggleList, clearHistory }) {
     return (
         <div className="bg-black/20 w-full h-screen flex justify-center items-center fixed inset-0 z-[100] backdrop-blur-sm" style={{ padding: '10px' }}>
-            <div className="relative bg-green-800/60 md:w-lg w-full md:max-h-170 md:h-170 h-110 min-h-70 flex flex-col overflow-hidden rounded-md" style={{ padding: '10px' }}>
+            <motion.div initial={{ maxHeight: 0 }} animate={{ maxHeight: 700 }} transition={{ duration: 0.6, ease: 'easeInOut' }} className="relative bg-green-800/60 md:w-lg w-full md:max-h-170 md:h-170 h-110 min-h-70 flex flex-col overflow-hidden rounded-md" style={{ padding: '10px' }}>
                 <div className="flex justify-between items-center" style={{ padding: '5px 0' }}>
                     <h1 className="text-yellow-300 md:text-3xl text-lg font-bold" style={{ margin: '0 0 10px 0' }}>Hisob Kitob Tarixi</h1>
 
@@ -47,9 +46,6 @@ function History({ total, history, isRecording, setIsRecording, toggleList, clea
                         <span className="md:text-xl text-sm font-bold">{total}</span>
                     </div>
                     <div className="flex gap-2 items-center">
-                        {/* <button
-                        onClick={() => sendTelegram(history)}
-                        >Send</button> */}
                         <button
                             onClick={clearHistory}
                             className="border-2 border-red-500 rounded-2xl text-red-500 hover:bg-red-500 hover:text-white"
@@ -60,7 +56,7 @@ function History({ total, history, isRecording, setIsRecording, toggleList, clea
                         >{isRecording ? 'STOP' : 'START'}</button>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     )
 }

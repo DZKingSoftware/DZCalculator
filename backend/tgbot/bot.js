@@ -91,7 +91,7 @@ bot.on('text', async (ctx) => {
                 });
 
                 const { loginToken, passwordToken, expiresAt } = response.data;
-                const durationText = `${duration} ${duration !== ':' ? 'daqiqa' : 'soat'}`;
+                const durationText = `${duration} daqiqa`;
 
                 if (waitingMsg) {
                     try { await bot.telegram.deleteMessage(ctx.chat.id, waitingMsg.message_id); } catch (e) {}

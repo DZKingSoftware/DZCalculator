@@ -124,8 +124,8 @@ function Calculator({ addToHistory, toggleList, showList, isRecording }) {
                         <button className="number-cal" onClick={() => handleNumber('2')}>2</button>
                         <button className="number-cal" onClick={() => handleNumber('3')}>3</button>
 
-                        <button className="number-cal" onClick={() => handleNumber('0')}>0</button>
                         <button className="number-cal" onClick={handleDecimal}><RxDotFilled /></button>
+                        <button className="number-cal" onClick={() => handleNumber('0')}>0</button>
                         <button style={{ backgroundColor: '#E1FA00', border: '2px solid lime', color: 'green' }} onClick={handleEqual}><FaEquals /></button>
                     </div>
                     <div className="w-30 grid grid-cols-1 gap-4 md:h-auto"
