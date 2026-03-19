@@ -24,6 +24,16 @@ function Calculator({ addToHistory, toggleList, showList, isRecording }) {
         }
     };
 
+    const formateDisplay = (val) => {
+        if (val === 'Error') return null;
+
+        const [integerPart, decimalPart] = val.split('.');
+
+        const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+        return decimalPart !== undefined ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+    }
+
     const handleDecimal = () => {
         if (waitingForOperad) {
             setDisplay('0.');
@@ -98,13 +108,14 @@ function Calculator({ addToHistory, toggleList, showList, isRecording }) {
                     padding: '10px'
                 }}
             >
-                <div className="w-full font-bold text-4xl text-yellow-300 h-15 flex items-center rounded-t-xl"
+                <div className="w-full md:max-w-177 max-w-74 whitespace-normal font-bold text-4xl overflow-x-auto text-yellow-300 h-15 whitespace-nowrap flex justify-end items-center rounded-t-xl"
                     style={{
                         padding: '5px 10px',
-                        backgroundColor: '#fff1'
+                        backgroundColor: '#fff1',
+                        // direction: 'ltr'
                     }}
                 >
-                    {display}
+                    {formateDisplay(display)}
                 </div>
                 <div className="flex md:w-auto w-full">
                     <div className="md:w-xl w-full grid grid-cols-3 gap-4" style={{ margin: '10px 0 0 0' }}>

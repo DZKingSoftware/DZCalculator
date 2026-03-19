@@ -82,7 +82,7 @@ function Login({ onLogin }) {
                 backgroundSize: 'cover',
             }}>
             <div className="bg-blur w-full h-screen flex flex-col justify-center items-center">
-                <h1 className="text-yellow-400 text-3xl font-bold">DZKing Calculeshion</h1>
+                <h1 className="text-yellow-400 text-3xl font-bold uppercase">Calculeshion</h1>
                 <div className={`msg-alert
                 bg-white transform duration-500 ease-in-out transition-all fixed border ${showMsg ? 'opacity-100 top-10' : 'opacity-0 -top-30'
                     }`}>
@@ -100,8 +100,8 @@ function Login({ onLogin }) {
                 </div>
 
                 <form onSubmit={handleSubmit} className="w-[80%] sm:w-2xl gap-y-2 flex flex-col">
-                    <div>
-                        <label className="block text-lg text-green-500 font-medium">
+                    <div className="log-cont">
+                        <label className=" block text-lg text-green-500 font-bold">
                             Username
                         </label>
                         <input
@@ -119,7 +119,7 @@ function Login({ onLogin }) {
                         )}
                     </div>
 
-                    <div>
+                    <div className="log-cont">
                         <label className="block text-lg text-green-500 font-bold">
                             Password
                         </label>
