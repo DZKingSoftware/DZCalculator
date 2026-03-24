@@ -1,3 +1,6 @@
+* {
+    scroll-behavior: smooth;
+}
 ::selection {
     background-color: rgba(0, 128, 0, 0.616);
     color: yellow;
