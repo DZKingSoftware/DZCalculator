@@ -112,7 +112,6 @@ function Calculator({ addToHistory, toggleList, showList, isRecording }) {
                     style={{
                         padding: '5px 10px',
                         backgroundColor: '#fff1',
-                        // direction: 'ltr'
                     }}
                 >
                     {formateDisplay(display)}

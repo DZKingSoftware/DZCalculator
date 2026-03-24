@@ -29,6 +29,8 @@ function Main() {
 
     const total = history.reduce((acc, item) => acc + Number(item.res), 0);
 
+    const formattedTotal = String(total).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+
     return (
         <div className="w-full h-screen"
             style={{
@@ -72,7 +74,7 @@ function Main() {
                         >
                             <History
                                 history={history}
-                                total={total}
+                                total={formattedTotal}
                                 isRecording={isRecording}
                                 setIsRecording={setIsRecording}
                                 toggleList={() => setShowList(!showList)}

@@ -32,7 +32,7 @@ function History({ total, history, isRecording, setIsRecording, toggleList, clea
                                         <tr className="bg-green-800 border-t-2 border-yellow-500" key={index}>
                                             <td>{index + 1}</td>
                                             <td>{item.operation}</td>
-                                            <td>{item.res}</td>
+                                            <td>{String(item.res).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -43,7 +43,7 @@ function History({ total, history, isRecording, setIsRecording, toggleList, clea
                 <div className="absolute flex justify-between items-center w-full left-0 right-0 bottom-2 z-[101]" style={{ padding: '0 10px' }}>
                     <div className="flex flex-col text-white">
                         <span className="text-sm font-bold text-yellow-300">Jami Natija:</span>
-                        <span className="md:text-xl text-sm font-bold">{total}</span>
+                        <span className="md:text-3xl text-sm font-bold">{total}</span>
                     </div>
                     <div className="flex gap-2 items-center">
                         <button
