@@ -5,7 +5,6 @@ import Calculator from "./calculator/Calculator";
 import History from "./history/History";
 import TimerDisplay from "./timer/timer";
 import timeUp from '../assets/icons/remove.png';
-import './Main.css';
 
 function Main() {
     const [history, setHistory] = useState([]);
@@ -40,11 +39,7 @@ function Main() {
                 backgroundPosition: 'center',
             }}>
             <div
-                className="w-full h-screen"
-                style={{
-                    backgroundColor: '#00000034',
-                    backdropFilter: 'blur(40px)'
-                }}>
+                className="w-full h-screen md:backdrop-blur-[30px] md:[-webkit-backdrop-filter:blur(30px)] [-webkit-backdrop-filter:blur(none)] backdrop-blur-none md:bg-[#00000034] bg-[#00000070]">
                 <div
                     className={`fixed ease-in-out bg-white z-[104] font-bold transition-all duration-500 border left-1/2 -translate-x-1/2 ${isTimer === '00:00:00' ? 'opacity-100 top-10' : 'opacity-0 -top-30'}`}
                     style={{ padding: '7px 20px', borderRadius: '10px', }}
