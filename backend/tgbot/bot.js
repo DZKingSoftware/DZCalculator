@@ -38,7 +38,7 @@ bot.hears('Login Parol Olish', async (ctx) => {
 bot.hears(`Ilovaga O'tish`, (ctx) => {
     ctx.reply(`Ilovadan Foydalanish uchun quyidagi Havolaga O'ting: `,
         Markup.inlineKeyboard([
-            [Markup.button.url('Ilovani Ochish', 'https://dz-calculator.netlify.app')]
+            [Markup.button.url('Ilovani Ochish', 'https://dz-calculation.netlify.app')]
         ])
     );
 });
