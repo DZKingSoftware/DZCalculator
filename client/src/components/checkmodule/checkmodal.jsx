@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
-import html2canvas from 'html2canvas';
-import { FaPen, FaCheck, FaXmark, FaDownload, FaCircleXmark, FaX } from 'react-icons/fa6';
+import { domToPng } from 'modern-screenshot';
+import { FaPen, FaCheck, FaXmark, FaDownload, FaX } from 'react-icons/fa6';
 import bgImage from '../../assets/background/bg.jpg';
 import xIcon from '../../assets/icons/remove.png';
 import './checkmodal.css';
@@ -12,21 +12,31 @@ function CheckModul({ history, total, onClose }) {
     const [tempValue, setTempValue] = useState('');
 
     const downloadCheck = async () => {
-        const element = checkRef.current;
+        if (checkRef.current === null) return;
 
-        const canvas = await html2canvas(element, {
-            backgroundColor: '#fff',
-            scale: 2,
-            logging: false,
-            useCORS: true
-        });
-
-        const data = canvas.toDataURL('image/png');
-
-        const link = document.createElement('a');
-        link.href = data;
-        link.download = `Check-${new Date().getTime()}.png`;
-        link.click();
+        domToPng(checkRef.current, {
+            quality: 1,
+            scale: 3,
+            features: {
+                copyStyles: true,
+            },
+            onCloneNode: (node) => {
+                const el = node;
+                if (el instanceof HTMLElement) {
+                    el.style.backgroundColor = '#14532d';
+                    el.style.color = '#fff'
+                }
+            }
+        })
+        .then((dataUrl) => {
+            const link = document.createElement('a');
+            link.download = `Check-${new Date().getTime()}.png`;
+            link.href = dataUrl;
+            link.click();
+        })
+        .catch((err) => {
+            console.error('Rasim Yuklashda Xatolik Yuz berdi: ', err)
+        })
     }
 
     const startEditing = (index, currentName) => {
@@ -44,9 +54,10 @@ function CheckModul({ history, total, onClose }) {
             <div className="flex items-center flex-col md:bg-black/30 h-screen md:backdrop-blur-2xl justify-center bg-black/70 md:text-lg text-sm" style={{ padding: '10px' }}>
                 <div
                     ref={checkRef}
-                    className="bg-green-800/70 text-white xl:w-3xl md:w-2xl"
+                    className="text-white xl:w-3xl md:w-2xl w-full"
                     style={{
-                        padding: '10px'
+                        padding: '10px',
+                        backgroundColor: '#14532d'
                     }}
                 >
                     <div>
@@ -64,15 +75,15 @@ function CheckModul({ history, total, onClose }) {
                             </tr>
                         </thead>
                         {history.length === 0 ? (
-                            <div className="text-center flex items-center absolute top-10 left-[50%] translate-x-[-50%] bg-white text-black font-bold md:text-lg text-sm rounded-lg" style={{ padding: '5px 20px' }}>Check Tarixi Yo'q.. <img src={xIcon} style={{ margin: '0 0 0 10px' }} width={25} alt="" /></div>
+                            <div className="w-[200px] sm:w-auto text-center flex items-center absolute top-10 left-[50%] translate-x-[-50%] bg-white text-black font-bold md:text-lg text-sm rounded-lg" style={{ padding: '5px 20px' }}>Check Tarixi Yo'q.. <img src={xIcon} style={{ margin: '0 0 0 10px' }} width={25} alt="" /></div>
                         ) : (
                             <tbody className="font-bold">
                                 {history.map((item, index) => (
-                                    <tr key={index} className="border-b-2 text-start">
+                                    <tr key={index} className="border-b-2">
                                         <td className="text-left">{index + 1}</td>
                                         <td className="text-left">
                                             {editingIndex === index ? (
-                                                <div className="flex items-center">
+                                                <div className="flex flex-col sm:flex-row items-start sm:items-center">
                                                     <input
                                                         className="w-[70%] border border-yellow-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 md:text-lg md:font-bold text-sm"
                                                         type="text"
@@ -80,12 +91,14 @@ function CheckModul({ history, total, onClose }) {
                                                         value={tempValue}
                                                         onChange={(e) => setTempValue(e.target.value)}
                                                     />
-                                                    <button className="icons-btn" onClick={() => saveName(index)} ><FaCheck className="icons-style" /></button>
-                                                    <button className="icons-btn" onClick={() => setEditingIndex(null)}><FaXmark className="icons-style" /></button>
+                                                    <div className="flex icon-res">
+                                                        <button className="icons-btn" onClick={() => saveName(index)} ><FaCheck className="icons-style" /></button>
+                                                        <button className="icons-btn" onClick={() => setEditingIndex(null)}><FaXmark className="icons-style" /></button>
+                                                    </div>
                                                 </div>
                                             ) : (
                                                 <div className="flex items-center group">
-                                                    <span>{rowNames[index] || 'Nomlanmagan'}</span>
+                                                    <span className="text-xs sm:text-lg">{rowNames[index] || 'Nomlanmagan'}</span>
                                                     <button
                                                         className="icons-btn ic"
                                                         onClick={() => {

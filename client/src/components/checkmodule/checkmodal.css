@@ -18,3 +18,11 @@
         font-size: 15px;
     }
 }
+@media screen and (max-width: 640px) {
+    .icons-btn:first-child {
+        margin-left: 0;
+    }
+    .icon-res {
+        margin: 5px 0 0 0;
+    }
+}
