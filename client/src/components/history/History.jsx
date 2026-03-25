@@ -1,16 +1,19 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaXmark } from "react-icons/fa6";
+import { CiBookmarkCheck } from "react-icons/ci";
 import './history.css';
 
-function History({ total, history, isRecording, setIsRecording, toggleList, clearHistory }) {
+function History({ total, history, isRecording, setIsRecording, toggleList, clearHistory, openCheck }) {
     return (
         <div className="md:bg-black/20 bg-black/50 w-full h-screen flex justify-center items-center fixed inset-0 z-[100] md:backdrop-blur-sm md:[-webkit-backdrop-filter:blur(10px)] backdrop-blur-none [-webkit-backdrop-filter:blur(none)]" style={{ padding: '10px' }}>
             <motion.div initial={{ maxHeight: 0 }} animate={{ maxHeight: 700 }} transition={{ duration: 0.6, ease: 'easeInOut' }} className="relative bg-green-800/60 md:w-4xl w-full md:max-h-170 md:h-170 h-110 min-h-70 flex flex-col overflow-hidden rounded-md" style={{ padding: '10px' }}>
                 <div className="flex justify-between items-center" style={{ padding: '5px 0' }}>
                     <h1 className="text-yellow-300 md:text-3xl text-lg font-bold" style={{ margin: '0 0 10px 0' }}>Hisob Kitob Tarixi</h1>
-
-                    <button onClick={toggleList} className="border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white"><FaXmark /></button>
+                    <div className="flex items-center">
+                        <button onClick={openCheck} className="border-2 border-yellow-300" style={{ margin: '0 5px 0 0' }}><CiBookmarkCheck className="text-yellow-300 font-bold text-lg" /></button>
+                        <button onClick={toggleList} className="border-2 border-red-500 text-red-600 hover:bg-red-500 hover:text-white"><FaXmark /></button>
+                    </div>
                 </div>
                 <div className=" text-white">
                     {history.length === 0 ? (

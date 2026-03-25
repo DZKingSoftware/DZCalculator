@@ -1,0 +1,20 @@
+.icons-style {
+    font-size: 20px;
+    font-weight: bold;
+}
+.icons-btn {
+    padding: 5px;
+    background-color: #ffff0083;
+    margin-left: 10px;
+}
+.icons-btn.ic {
+    opacity: 0;
+}
+.group:hover .icons-btn.ic {
+    opacity: 1;
+}
+@media screen and (Max-width: 776px) {
+    .icons-style {
+        font-size: 15px;
+    }
+}
