@@ -10,12 +10,22 @@
 .icons-btn.ic {
     opacity: 0;
 }
-.group:hover .icons-btn.ic {
+.group-span:hover .icons-btn.ic {
     opacity: 1;
+}
+.check-con::-webkit-scrollbar {
+    width: 5px;
+}
+.check-con::-webkit-scrollbar-thumb {
+    background-color: yellow;
+    border-radius: 10px;
 }
 @media screen and (Max-width: 776px) {
     .icons-style {
         font-size: 15px;
+    }
+    .tab-group .trd:hover {
+        left: -20px;
     }
 }
 @media screen and (max-width: 640px) {
@@ -24,5 +34,19 @@
     }
     .icon-res {
         margin: 5px 0 0 0;
+    }
+    .trd {
+        position: relative;
+    }
+    .trd:hover {
+        transform: translateX(-50px);
+    }
+    .trd .trd-trash {
+        border: 1px solid transparent;
+        padding: 8px 10px;
+        top: 3px;
+    }
+    .trd:hover .trd-trash {
+        opacity: 1;
     }
 }

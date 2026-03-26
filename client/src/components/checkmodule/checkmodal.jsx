@@ -1,11 +1,12 @@
 import React, { useState, useRef } from "react";
 import { domToPng } from 'modern-screenshot';
 import { FaPen, FaCheck, FaXmark, FaDownload, FaX } from 'react-icons/fa6';
+import { FaTrashAlt } from "react-icons/fa";
 import bgImage from '../../assets/background/bg.jpg';
 import xIcon from '../../assets/icons/remove.png';
 import './checkmodal.css';
 
-function CheckModul({ history, total, onClose }) {
+function CheckModul({ history, total, onClose, onDelete }) {
     const checkRef = useRef(null);
     const [rowNames, setRowNames] = useState({});
     const [editingIndex, setEditingIndex] = useState(null);
@@ -24,19 +25,26 @@ function CheckModul({ history, total, onClose }) {
                 const el = node;
                 if (el instanceof HTMLElement) {
                     el.style.backgroundColor = '#14532d';
-                    el.style.color = '#fff'
+                    el.style.color = '#fff';
+
+                    const scrollContainer = el.querySelector('.check-con');
+                    if (scrollContainer) {
+                        scrollContainer.style.maxHeight = 'none';
+                        scrollContainer.style.overflow = 'visible';
+                        scrollContainer.style.height = '100%';
+                    }
                 }
             }
         })
-        .then((dataUrl) => {
-            const link = document.createElement('a');
-            link.download = `Check-${new Date().getTime()}.png`;
-            link.href = dataUrl;
-            link.click();
-        })
-        .catch((err) => {
-            console.error('Rasim Yuklashda Xatolik Yuz berdi: ', err)
-        })
+            .then((dataUrl) => {
+                const link = document.createElement('a');
+                link.download = `Check-${new Date().getTime()}.png`;
+                link.href = dataUrl;
+                link.click();
+            })
+            .catch((err) => {
+                console.error('Rasim Yuklashda Xatolik Yuz berdi: ', err)
+            })
     }
 
     const startEditing = (index, currentName) => {
@@ -54,7 +62,7 @@ function CheckModul({ history, total, onClose }) {
             <div className="flex items-center flex-col md:bg-black/30 h-screen md:backdrop-blur-2xl justify-center bg-black/70 md:text-lg text-sm" style={{ padding: '10px' }}>
                 <div
                     ref={checkRef}
-                    className="text-white xl:w-3xl md:w-2xl w-full"
+                    className="text-white xl:w-3xl md:w-2xl w-full relative tab-group"
                     style={{
                         padding: '10px',
                         backgroundColor: '#14532d'
@@ -65,60 +73,63 @@ function CheckModul({ history, total, onClose }) {
                         <h1 className="font-bold">Check</h1>
                         <p className="font-bold">ID: {Math.floor(Math.random() * 10000)}</p>
                     </div>
-                    <table className="w-full table-fixed">
-                        <thead className="">
-                            <tr className="border-b-1">
-                                <th className="w-[10%] text-left">#</th>
-                                <th className="w-[40%] text-left">Nomi</th>
-                                <th className="w-[30%] text-right">Soni, Narxi</th>
-                                <th className="w-[20%] text-right">Jami</th>
-                            </tr>
-                        </thead>
-                        {history.length === 0 ? (
-                            <div className="w-[200px] sm:w-auto text-center flex items-center absolute top-10 left-[50%] translate-x-[-50%] bg-white text-black font-bold md:text-lg text-sm rounded-lg" style={{ padding: '5px 20px' }}>Check Tarixi Yo'q.. <img src={xIcon} style={{ margin: '0 0 0 10px' }} width={25} alt="" /></div>
-                        ) : (
-                            <tbody className="font-bold">
-                                {history.map((item, index) => (
-                                    <tr key={index} className="border-b-2">
-                                        <td className="text-left">{index + 1}</td>
-                                        <td className="text-left">
-                                            {editingIndex === index ? (
-                                                <div className="flex flex-col sm:flex-row items-start sm:items-center">
-                                                    <input
-                                                        className="w-[70%] border border-yellow-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 md:text-lg md:font-bold text-sm"
-                                                        type="text"
-                                                        autoFocus
-                                                        value={tempValue}
-                                                        onChange={(e) => setTempValue(e.target.value)}
-                                                    />
-                                                    <div className="flex icon-res">
-                                                        <button className="icons-btn" onClick={() => saveName(index)} ><FaCheck className="icons-style" /></button>
-                                                        <button className="icons-btn" onClick={() => setEditingIndex(null)}><FaXmark className="icons-style" /></button>
+                    <div className="check-con md:max-h-135 max-h-70 overflow-y-auto overflow-x-hidden">
+                        <table className="w-full md:table-fixed border-collapse md:border-none">
+                            <thead className="sm:text-base text-[13px]">
+                                <tr className="border-b-1">
+                                    <th className="w-[10%] text-left">#</th>
+                                    <th className="w-[40%] text-left">Nomi</th>
+                                    <th className="w-[30%] whitespace-nowrap text-right">Soni, Narxi</th>
+                                    <th className="w-[20%] text-right">Jami</th>
+                                </tr>
+                            </thead>
+                            {history.length === 0 ? (
+                                <div className="w-[200px] sm:w-auto text-center flex items-center absolute -top-70 left-[50%] translate-x-[-50%] bg-white text-black font-bold md:text-lg rounded-lg" style={{ padding: '5px 20px' }}>Check Tarixi Yo'q.. <img src={xIcon} style={{ margin: '0 0 0 10px' }} width={25} alt="" /></div>
+                            ) : (
+                                <tbody className="font-bold">
+                                    {history.map((item, index) => (
+                                        <tr key={index} className="group trd border-b-2 w-full">
+                                            <td className="text-left">{index + 1}</td>
+                                            <td className="text-left">
+                                                {editingIndex === index ? (
+                                                    <div className="flex flex-col sm:flex-row items-start sm:items-center">
+                                                        <input
+                                                            className="w-[70%] border border-yellow-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 md:text-lg md:font-bold text-sm"
+                                                            type="text"
+                                                            autoFocus
+                                                            value={tempValue}
+                                                            onChange={(e) => setTempValue(e.target.value)}
+                                                        />
+                                                        <div className="flex icon-res">
+                                                            <button className="icons-btn" onClick={() => saveName(index)} ><FaCheck className="icons-style" /></button>
+                                                            <button className="icons-btn" onClick={() => setEditingIndex(null)}><FaXmark className="icons-style" /></button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ) : (
-                                                <div className="flex items-center group">
-                                                    <span className="text-xs sm:text-lg">{rowNames[index] || 'Nomlanmagan'}</span>
-                                                    <button
-                                                        className="icons-btn ic"
-                                                        onClick={() => {
-                                                            setEditingIndex(index);
-                                                            setTempValue(rowNames[index] || '')
-                                                        }}
-                                                    ><FaPen className="icons-style" /></button>
-                                                </div>
-                                            )}
-                                        </td>
-                                        <td className="text-right">{item.operation}</td>
-                                        <td className="text-right">{String(item.res).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        )}
-                    </table>
+                                                ) : (
+                                                    <div className="flex items-center group-span">
+                                                        <span className="text-xs sm:text-lg">{rowNames[index] || 'Nomlanmagan'}</span>
+                                                        <button
+                                                            className="icons-btn ic"
+                                                            onClick={() => {
+                                                                setEditingIndex(index);
+                                                                setTempValue(rowNames[index] || '')
+                                                            }}
+                                                        ><FaPen className="icons-style" /></button>
+                                                    </div>
+                                                )}
+                                            </td>
+                                            <td className="text-right whitespace-nowrap text-[11px] sm:text-base">{item.operation}</td>
+                                            <td className="text-right whitespace-nowrap text-[11px] sm:text-base">{String(item.res).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}</td>
+                                            <button className="trd-trash absolute sm:group-hover:opacity-100 hover:border-red-500 sm:border-2 border-transparent -right-13 z-[300] opacity-0" onClick={() => onDelete(index)}><FaTrashAlt className="text-sm sm:text-base text-red-500" /></button>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            )}
+                        </table>
+                    </div>
                     <div className="flex items-center" style={{ margin: '10px 0' }}>
                         <span className="font-bold">Jami:</span>
-                        <span className="font-bold md:text-2xl text-sm" style={{ margin: '0 0 0 5px' }}>{total}</span>
+                        <span className="font-bold md:text-2xl text-sm whitespace-nowrap" style={{ margin: '0 0 0 5px' }}>{total}</span>
                     </div>
                 </div>
                 <div className="flex gap-2 items-center" style={{ margin: '10px 0' }}>

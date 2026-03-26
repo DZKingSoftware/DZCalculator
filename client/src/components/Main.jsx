@@ -17,12 +17,19 @@ function Main() {
     const addToHistory = (a, b, op, res) => {
         if (isRecording !== 'Error') {
             const newItem = {
+                id: Date.now() + Math.random(),
                 operation: `${a} ${op} ${b}`,
                 res: res
             }
             setHistory(prev => [newItem, ...prev]);
         };
     };
+
+    const deleteFromHistory = (index) => {
+        const newHistory = [...history];
+        newHistory.splice(index, 1);
+        setHistory(newHistory);
+    }
 
     const clearHistory = () => {
         setHistory([]);
@@ -87,6 +94,7 @@ function Main() {
                             history={history}
                             total={formattedTotal}
                             onClose={() => setShowCheck(false)}
+                            onDelete={deleteFromHistory}
                         />
                     )}
                 </div>
