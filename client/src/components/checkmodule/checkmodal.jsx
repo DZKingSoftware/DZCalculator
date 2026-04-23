@@ -111,7 +111,7 @@ function CheckModul({ history, total, onClose, onDelete }) {
                         <p className="font-bold">ID: {Math.floor(Math.random() * 10000)}</p>
                     </div>
                     <div className="check-con md:max-h-135 max-h-70 overflow-y-auto overflow-x-hidden">
-                        <table className="w-full md:table-fixed border-collapse md:border-none">
+                        <table className="w-full md:table-fixed whitespace-normal border-collapse md:border-none">
                             <thead className="sm:text-base text-[13px]">
                                 <tr className="border-b-1">
                                     <th className="w-[10%] text-left">#</th>
@@ -129,7 +129,7 @@ function CheckModul({ history, total, onClose, onDelete }) {
                                         onTouchStart={handleTouchStart}
                                         onTouchMove={handleTouchMove}
                                         onTouchEnd={e => handleTouchEnd(e, index)}
-                                            className="group trd border-b-2 w-full"
+                                        className="group trd border-b-2 w-full"
 
                                         >
                                             <td colSpan={4} className="trd">
@@ -138,10 +138,10 @@ function CheckModul({ history, total, onClose, onDelete }) {
                                                     md:translate-0
                                                 `}>
                                                     <div className="w-[10%] text-left">{index + 1}</div>
-                                                    <div className="w-[40%] text-left">
+                                                    <div className="w-[40%] text-left min-w-0">
                                                         {editingIndex === index ? (
                                                             <div className="flex flex-col sm:flex-row items-start sm:items-center">
-                                                                <input
+                                                                <textarea
                                                                     className="w-[70%] border border-yellow-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 md:text-lg md:font-bold text-sm"
                                                                     type="text"
                                                                     autoFocus
@@ -155,7 +155,7 @@ function CheckModul({ history, total, onClose, onDelete }) {
                                                             </div>
                                                         ) : (
                                                             <div className="flex items-center group-span">
-                                                                <span className="text-xs sm:text-lg">{rowNames[index] || 'Nomlanmagan'}</span>
+                                                                <span className="text-xs sm:text-lg whitespace-normal break-all block">{rowNames[index] || 'Nomlanmagan'}</span>
                                                                 <button
                                                                     className="icons-btn ic"
                                                                     onClick={() => {
@@ -175,9 +175,9 @@ function CheckModul({ history, total, onClose, onDelete }) {
                                                     ><FaTrashAlt className="text-sm sm:text-base text-red-500" /></button>
                                                 </div>
                                             </td>
-                                            <td className="absolute -right-20">
+                                            <div className="absolute -right-20">
                                                 <button className="hidden md:block trd-trash sm:group-hover:opacity-100 hover:border-red-500 opacity-0 sm:border-2 border-transparent" onClick={() => onDelete(index)}><FaTrashAlt className="text-sm sm:text-base text-red-500" /></button>
-                                            </td>
+                                            </div>
                                         </tr>
                                     ))}
                                 </tbody>
