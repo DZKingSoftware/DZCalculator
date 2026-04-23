@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { motion } from 'framer-motion';
 import { domToPng } from 'modern-screenshot';
 import { FaPen, FaCheck, FaXmark, FaDownload, FaX } from 'react-icons/fa6';
 import { FaTrashAlt } from "react-icons/fa";
@@ -11,6 +12,15 @@ function CheckModul({ history, total, onClose, onDelete }) {
     const [rowNames, setRowNames] = useState({});
     const [editingIndex, setEditingIndex] = useState(null);
     const [tempValue, setTempValue] = useState('');
+    const [swipedRow, setSwipedRow] = useState(null);
+    const [touchStart, setTouchStart] = useState(null);
+    const [touchStartY, setTouchStartY] = useState(null);
+
+    useEffect(() => {
+        const handleClickOutside = () => setSwipedRow(null);
+        window.addEventListener('click', handleClickOutside);
+        return () => window.removeEventListener('click', handleClickOutside);
+    }, []);
 
     const downloadCheck = async () => {
         if (checkRef.current === null) return;
@@ -57,6 +67,33 @@ function CheckModul({ history, total, onClose, onDelete }) {
         setEditingIndex(null);
     };
 
+    const handleTouchStart = (e) => {
+        setTouchStart(e.targetTouches[0].clientX);
+        setTouchStartY(e.targetTouches[0].clientY);
+    };
+
+    const handleTouchMove = (e) => {
+        // ............?
+    };
+
+    const handleTouchEnd = (e, index) => {
+        if (window.innerWidth >= 768) return;
+
+        const touchEnd = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+
+        const deltaX = touchStart - touchEnd;
+        const deltaY = Math.abs(touchStartY - touchEndY);
+
+        if (Math.abs(deltaX) > 50) {
+            if (deltaX > 0) {
+                setSwipedRow(index);
+            } else {
+                setSwipedRow(null)
+            }
+        }
+    };
+
     return (
         <div className="fixed z-[105] w-full h-screen inset-0 bg-no-repeat bg-center" style={{ background: `url(${bgImage})`, backgroundSize: 'cover' }}>
             <div className="flex items-center flex-col md:bg-black/30 h-screen md:backdrop-blur-2xl justify-center bg-black/70 md:text-lg text-sm" style={{ padding: '10px' }}>
@@ -84,43 +121,63 @@ function CheckModul({ history, total, onClose, onDelete }) {
                                 </tr>
                             </thead>
                             {history.length === 0 ? (
-                                <div className="w-[200px] sm:w-auto text-center flex items-center absolute -top-70 left-[50%] translate-x-[-50%] bg-white text-black font-bold md:text-lg rounded-lg" style={{ padding: '5px 20px' }}>Check Tarixi Yo'q.. <img src={xIcon} style={{ margin: '0 0 0 10px' }} width={25} alt="" /></div>
+                                <div className="w-[200px] sm:w-auto text-center flex items-center fixed top-10 left-[50%] translate-x-[-50%] bg-white text-black font-bold md:text-lg rounded-lg" style={{ padding: '5px 20px' }}>Check Tarixi Yo'q.. <img src={xIcon} style={{ margin: '0 0 0 10px' }} width={25} alt="" /></div>
                             ) : (
                                 <tbody className="font-bold">
                                     {history.map((item, index) => (
-                                        <tr key={index} className="group trd border-b-2 w-full">
-                                            <td className="text-left">{index + 1}</td>
-                                            <td className="text-left">
-                                                {editingIndex === index ? (
-                                                    <div className="flex flex-col sm:flex-row items-start sm:items-center">
-                                                        <input
-                                                            className="w-[70%] border border-yellow-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 md:text-lg md:font-bold text-sm"
-                                                            type="text"
-                                                            autoFocus
-                                                            value={tempValue}
-                                                            onChange={(e) => setTempValue(e.target.value)}
-                                                        />
-                                                        <div className="flex icon-res">
-                                                            <button className="icons-btn" onClick={() => saveName(index)} ><FaCheck className="icons-style" /></button>
-                                                            <button className="icons-btn" onClick={() => setEditingIndex(null)}><FaXmark className="icons-style" /></button>
-                                                        </div>
+                                        <tr key={index}
+                                        onTouchStart={handleTouchStart}
+                                        onTouchMove={handleTouchMove}
+                                        onTouchEnd={e => handleTouchEnd(e, index)}
+                                            className="group trd border-b-2 w-full"
+
+                                        >
+                                            <td colSpan={4} className="trd">
+                                                <div className={`flex items-center w-full transition-transform duration-300 ease-in-out
+                                                    ${swipedRow === index ? '-translate-x-16' : 'translate-x-0'}
+                                                    md:translate-0
+                                                `}>
+                                                    <div className="w-[10%] text-left">{index + 1}</div>
+                                                    <div className="w-[40%] text-left">
+                                                        {editingIndex === index ? (
+                                                            <div className="flex flex-col sm:flex-row items-start sm:items-center">
+                                                                <input
+                                                                    className="w-[70%] border border-yellow-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 md:text-lg md:font-bold text-sm"
+                                                                    type="text"
+                                                                    autoFocus
+                                                                    value={tempValue}
+                                                                    onChange={(e) => setTempValue(e.target.value)}
+                                                                />
+                                                                <div className="flex icon-res">
+                                                                    <button className="icons-btn" onClick={() => saveName(index)} ><FaCheck className="icons-style" /></button>
+                                                                    <button className="icons-btn" onClick={() => setEditingIndex(null)}><FaXmark className="icons-style" /></button>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex items-center group-span">
+                                                                <span className="text-xs sm:text-lg">{rowNames[index] || 'Nomlanmagan'}</span>
+                                                                <button
+                                                                    className="icons-btn ic"
+                                                                    onClick={() => {
+                                                                        setEditingIndex(index);
+                                                                        setTempValue(rowNames[index] || '')
+                                                                    }}
+                                                                ><FaPen className="icons-style" /></button>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                ) : (
-                                                    <div className="flex items-center group-span">
-                                                        <span className="text-xs sm:text-lg">{rowNames[index] || 'Nomlanmagan'}</span>
-                                                        <button
-                                                            className="icons-btn ic"
-                                                            onClick={() => {
-                                                                setEditingIndex(index);
-                                                                setTempValue(rowNames[index] || '')
-                                                            }}
-                                                        ><FaPen className="icons-style" /></button>
-                                                    </div>
-                                                )}
+                                                    <div className="w-[25%] text-right whitespace-nowrap text-[11px] sm:text-base">{item.operation}</div>
+                                                    <div className="w-[25%] text-right whitespace-nowrap text-[11px] sm:text-base">{String(item.res).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}</div>
+                                                    <button className={`block trd-trash md:hidden absolute sm:group-hover:opacity-100 hover:border-red-500 sm:border-2 border-transparent right-0 top-[50%] -translate-y-[50%] z-[105]
+                                                            ${swipedRow === index ? 'translate-x-18' : 'translate-x-20'}
+                                                        `}
+                                                        onClick={() => onDelete(index)}
+                                                    ><FaTrashAlt className="text-sm sm:text-base text-red-500" /></button>
+                                                </div>
                                             </td>
-                                            <td className="text-right whitespace-nowrap text-[11px] sm:text-base">{item.operation}</td>
-                                            <td className="text-right whitespace-nowrap text-[11px] sm:text-base">{String(item.res).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}</td>
-                                            <button className="trd-trash absolute sm:group-hover:opacity-100 hover:border-red-500 sm:border-2 border-transparent -right-13 z-[300] opacity-0" onClick={() => onDelete(index)}><FaTrashAlt className="text-sm sm:text-base text-red-500" /></button>
+                                            <td className="absolute -right-20">
+                                                <button className="hidden md:block trd-trash sm:group-hover:opacity-100 hover:border-red-500 opacity-0 sm:border-2 border-transparent" onClick={() => onDelete(index)}><FaTrashAlt className="text-sm sm:text-base text-red-500" /></button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>

@@ -24,8 +24,8 @@
     .icons-style {
         font-size: 15px;
     }
-    .tab-group .trd:hover {
-        left: -20px;
+    .trd .trd-trash {
+        padding: 8px;
     }
 }
 @media screen and (max-width: 640px) {
@@ -38,15 +38,9 @@
     .trd {
         position: relative;
     }
-    .trd:hover {
-        transform: translateX(-50px);
-    }
     .trd .trd-trash {
         border: 1px solid transparent;
-        padding: 8px 10px;
-        top: 3px;
-    }
-    .trd:hover .trd-trash {
-        opacity: 1;
+        padding: 5px;
+        top: 50%;
     }
 }
