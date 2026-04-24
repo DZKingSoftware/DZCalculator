@@ -155,9 +155,9 @@ function Login({ onLogin }) {
                         {!success ? 'Login' : 'Loading...'}
                     </button>
                 </form>
-                <div className={`hanging fixed left-0 ${getLogin ? '-bottom-10' : '-bottom-200'} ease-in-out`} style={{ backgroundImage: `url(${hangingImg})` }}>
+                <div className={`hanging fixed left-0 ${getLogin ? '-bottom-20' : '-bottom-200'} ease-in-out`} style={{ backgroundImage: `url(${hangingImg})` }}>
                     {getLogin && (
-                        <div className="text-[#2E4F3E] md:text-[15px] text-[10px] w-[380px]">Don’t have a login and password yet? You can get them here! <br /> <a href="https://t.me/dzcalculation_bot"><button className="hanging-btn">Get</button></a></div>
+                        <div className="text-[#2E4F3E] md:text-[15px] text-[10px] w-[340px]">Don’t have a login and password yet? You can get them here! <br /> <a href="https://t.me/dzcalculation_bot"><button className="hanging-btn">Get</button></a></div>
                     )}
                 </div>
             </div>

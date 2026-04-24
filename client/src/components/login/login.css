@@ -41,7 +41,7 @@ form {
 }
 .hanging {
     width: 400px;
-    height: 400px;
+    height: 380px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -55,7 +55,7 @@ form {
     margin: 0 0 120px 25px;
 }
 .hanging-btn {
-    margin: 10px 0 0 140px;
+    margin: 20px 0 0 125px;
     background-color: #f6d18a;
     box-shadow: 0 10px 1px #000;
     border: 1px solid transparent;
