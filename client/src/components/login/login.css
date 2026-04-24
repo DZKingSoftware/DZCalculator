@@ -4,6 +4,10 @@
     box-sizing: border-box;
     transition: 0.5s;
 }
+@font-face {
+    font-family: 'QueenRocker';
+    src: url('../../assets/font/QueenRocker.ttf');
+}
 
 html,
 body {
@@ -35,6 +39,31 @@ input {
 form {
     padding: 15px !important;
 }
+.hanging {
+    width: 400px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'QueenRocker';
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: 1s;
+}
+.hanging > div {
+    margin: 0 0 120px 25px;
+}
+.hanging-btn {
+    margin: 10px 0 0 140px;
+    background-color: #f6d18a;
+    box-shadow: 0 10px 1px #000;
+    border: 1px solid transparent;
+}
+.hanging-btn:active {
+    box-shadow: 0 0px 1px #000;
+    transform: scale(0.8);
+}
 
 @media screen and (max-width: 776px) {
     .bg-blur {
@@ -50,5 +79,19 @@ form {
 
     h1 {
         font-size: x-large;
+    }
+    .hanging {
+        width: 300px;
+        height: 300px;
+    }
+    .hanging > div {
+        font-size: 15px;
+        margin:  0 0 80px 25px;
+    }
+    .hanging-btn {
+        width: 70px;
+        height: 40px;
+        font-size: 15px;
+        margin: 5px 0 0 95px;
     }
 }

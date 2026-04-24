@@ -8,31 +8,58 @@ import CheckModul from "./checkmodule/checkmodal";
 import timeUp from '../assets/icons/remove.png';
 
 function Main() {
-    const [history, setHistory] = useState([]);
     const [showList, setShowList] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [showCheck, setShowCheck] = useState(false);
     const [isTimer, setIsTimer] = useState('');
+    const [swipedRow, setSwipedRow] = useState(null);
+    const [history, setHistory] = useState(() => {
+        const savedHistory = localStorage.getItem('calculatorHistory');
+        return savedHistory ? JSON.parse(savedHistory) : [];
+    });
+    const [rowNames, setRowNames] = useState(() => {
+        const saved = localStorage.getItem('rowNames');
+        return saved ? JSON.parse(saved) : {};
+    });
 
     const addToHistory = (a, b, op, res) => {
         if (isRecording !== 'Error') {
             const newItem = {
-                id: Date.now() + Math.random(),
+                id: Date.now(),
                 operation: `${a} ${op} ${b}`,
                 res: res
-            }
-            setHistory(prev => [newItem, ...prev]);
+            };
+            
+            const newHistory = [newItem, ...history];
+
+            setHistory(newHistory);
+
+            localStorage.setItem('calculatorHistory', JSON.stringify(newHistory));
         };
     };
 
-    const deleteFromHistory = (index) => {
-        const newHistory = [...history];
-        newHistory.splice(index, 1);
+    const deleteFromHistory = (itemToDelete) => {
+        const newHistory = history.filter((item) => item.id !== itemToDelete.id);
         setHistory(newHistory);
-    }
+        localStorage.setItem('calculatorHistory', JSON.stringify(newHistory));
+
+        const newNames = { ...rowNames };
+        delete newNames[itemToDelete.id];
+        setRowNames(newNames);
+        localStorage.setItem('rowNames', JSON.stringify(newNames));
+
+        setSwipedRow(null);
+    };
 
     const clearHistory = () => {
+        localStorage.removeItem('calculatorHistory');
         setHistory([]);
+    };
+
+    const saveName = (id, newName) => {
+        const newNames = { ...rowNames, [id]: newName };
+        setRowNames(newNames);
+        localStorage.setItem('rowNames', JSON.stringify(newNames));
     }
 
     const total = history.reduce((acc, item) => acc + Number(item.res), 0);
@@ -50,7 +77,7 @@ function Main() {
             <div
                 className="w-full h-screen md:backdrop-blur-[30px] md:[-webkit-backdrop-filter:blur(30px)] [-webkit-backdrop-filter:blur(none)] backdrop-blur-none md:bg-[#00000034] bg-[#00000070]">
                 <div
-                    className={`fixed ease-in-out bg-white z-[104] font-bold transition-all duration-500 border left-1/2 -translate-x-1/2 ${isTimer === '00:00:00' ? 'opacity-100 top-10' : 'opacity-0 -top-30'}`}
+                    className={`fixed ease-in-out bg-white z-[10000] font-bold transition-all duration-500 border left-1/2 -translate-x-1/2 ${isTimer === '00:00:00' ? 'opacity-100 top-10' : 'opacity-0 -top-30'}`}
                     style={{ padding: '7px 20px', borderRadius: '10px', }}
                 >
                     <div className="flex items-center">Your Time is Up <img src={timeUp} style={{ margin: '0 0 0 5px' }} width={25} alt="" /></div>
@@ -95,6 +122,10 @@ function Main() {
                             total={formattedTotal}
                             onClose={() => setShowCheck(false)}
                             onDelete={deleteFromHistory}
+                            swipedRow={swipedRow}
+                            setSwipedRow={setSwipedRow}
+                            saveName={saveName}
+                            rowNames={rowNames}
                         />
                     )}
                 </div>

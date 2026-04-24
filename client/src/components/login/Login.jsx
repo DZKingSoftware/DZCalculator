@@ -4,6 +4,7 @@ import bgImge from '../../assets/background/bg.jpg';
 import successIcon from '../../assets/icons/check.png';
 import errorIcon from '../../assets/icons/remove.png';
 import { getDeviceId } from "../utils/getDeviceId";
+import hangingImg from '../../assets/hanging/hanging.png';
 import './login.css';
 
 function Login({ onLogin }) {
@@ -12,6 +13,7 @@ function Login({ onLogin }) {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [showMsg, setShowMsg] = useState(false);
+    const [getLogin, setGetLogin] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [inputValue, setInputValue] = useState({ username: false, password: false });
 
@@ -47,7 +49,7 @@ function Login({ onLogin }) {
                 setSuccess(`Login in Success`);
                 setShowMsg(true);
 
-                localStorage.setItem("token", response.data.token); 
+                localStorage.setItem("token", response.data.token);
                 localStorage.setItem("userName", response.data.name);
                 localStorage.setItem("expiresAt", response.data.expiresAt);
                 localStorage.setItem("isLoggedIn", 'true');
@@ -60,6 +62,7 @@ function Login({ onLogin }) {
             const errorMsg = error.response?.data?.message || `Login yoki Parol Noto'g'ri!`
             setError(errorMsg);
             setShowMsg(true);
+            setGetLogin(true)
         } finally {
             setIsLoading(false)
         }
@@ -67,7 +70,10 @@ function Login({ onLogin }) {
     useEffect(() => {
         if (showMsg && error) {
             const timer = setTimeout(() => {
-                setShowMsg(false);
+                const errorTime = setTimeout(() => {
+                    setShowMsg(false);
+                }, 2900);
+                return () => clearTimeout(errorTime);
                 setError('');
             }, 3000);
             return () => clearTimeout(timer);
@@ -107,7 +113,7 @@ function Login({ onLogin }) {
                         <input
                             type="text"
                             value={username}
-                            onChange={(e) => {setUsername(e.target.value), setInputValue(prev => ({ ...prev, username: false }))}}
+                            onChange={(e) => { setUsername(e.target.value), setInputValue(prev => ({ ...prev, username: false })) }}
                             className="text-green-500 text-lg bg-black w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             style={{
                                 padding: '5px 10px',
@@ -126,7 +132,7 @@ function Login({ onLogin }) {
                         <input
                             type="password"
                             value={password}
-                            onChange={(e) => {setPassword(e.target.value), setInputValue(prev => ({ ...prev, password: false }))}}
+                            onChange={(e) => { setPassword(e.target.value), setInputValue(prev => ({ ...prev, password: false })) }}
                             className="text-green-500 bg-black text-lg focus:outline-none focus:ring-2 focus:ring-green-500 w-full rounded-lg"
                             style={{
                                 padding: '5px 10px'
@@ -149,6 +155,11 @@ function Login({ onLogin }) {
                         {!success ? 'Login' : 'Loading...'}
                     </button>
                 </form>
+                <div className={`hanging fixed left-0 ${getLogin ? '-bottom-10' : '-bottom-200'} ease-in-out`} style={{ backgroundImage: `url(${hangingImg})` }}>
+                    {getLogin && (
+                        <div className="text-[#2E4F3E] md:text-[15px] text-[10px] w-[380px]">Don’t have a login and password yet? You can get them here! <br /> <a href="https://t.me/dzcalculation_bot"><button className="hanging-btn">Get</button></a></div>
+                    )}
+                </div>
             </div>
         </div>
     )

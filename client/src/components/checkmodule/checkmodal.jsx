@@ -7,12 +7,10 @@ import bgImage from '../../assets/background/bg.jpg';
 import xIcon from '../../assets/icons/remove.png';
 import './checkmodal.css';
 
-function CheckModul({ history, total, onClose, onDelete }) {
+function CheckModul({ history, total, onClose, onDelete, swipedRow, setSwipedRow, saveName, rowNames }) {
     const checkRef = useRef(null);
-    const [rowNames, setRowNames] = useState({});
     const [editingIndex, setEditingIndex] = useState(null);
     const [tempValue, setTempValue] = useState('');
-    const [swipedRow, setSwipedRow] = useState(null);
     const [touchStart, setTouchStart] = useState(null);
     const [touchStartY, setTouchStartY] = useState(null);
 
@@ -62,11 +60,6 @@ function CheckModul({ history, total, onClose, onDelete }) {
         setTempValue(currentName) || '';
     };
 
-    const saveName = (index) => {
-        setRowNames({ ...rowNames, [index]: tempValue });
-        setEditingIndex(null);
-    };
-
     const handleTouchStart = (e) => {
         setTouchStart(e.targetTouches[0].clientX);
         setTouchStartY(e.targetTouches[0].clientY);
@@ -76,7 +69,7 @@ function CheckModul({ history, total, onClose, onDelete }) {
         // ............?
     };
 
-    const handleTouchEnd = (e, index) => {
+    const handleTouchEnd = (e, id) => {
         if (window.innerWidth >= 768) return;
 
         const touchEnd = e.changedTouches[0].clientX;
@@ -87,12 +80,17 @@ function CheckModul({ history, total, onClose, onDelete }) {
 
         if (Math.abs(deltaX) > 50) {
             if (deltaX > 0) {
-                setSwipedRow(index);
+                setSwipedRow(id);
             } else {
                 setSwipedRow(null)
             }
         }
     };
+
+    const handleSave = (id) => {
+        saveName(id, tempValue);
+        setEditingIndex(null);
+    }
 
     return (
         <div className="fixed z-[105] w-full h-screen inset-0 bg-no-repeat bg-center" style={{ background: `url(${bgImage})`, backgroundSize: 'cover' }}>
@@ -125,23 +123,23 @@ function CheckModul({ history, total, onClose, onDelete }) {
                             ) : (
                                 <tbody className="font-bold">
                                     {history.map((item, index) => (
-                                        <tr key={index}
-                                        onTouchStart={handleTouchStart}
-                                        onTouchMove={handleTouchMove}
-                                        onTouchEnd={e => handleTouchEnd(e, index)}
-                                        className="group trd border-b-2 w-full"
+                                        <tr key={item.id}
+                                            onTouchStart={handleTouchStart}
+                                            onTouchMove={handleTouchMove}
+                                            onTouchEnd={e => handleTouchEnd(e, item.id)}
+                                            className="group trd border-b-2 w-full"
 
                                         >
                                             <td colSpan={4} className="trd">
                                                 <div className={`flex items-center w-full transition-transform duration-300 ease-in-out
-                                                    ${swipedRow === index ? '-translate-x-16' : 'translate-x-0'}
+                                                    ${swipedRow === item.id ? '-translate-x-16' : 'translate-x-0'}
                                                     md:translate-0
                                                 `}>
                                                     <div className="w-[10%] text-left">{index + 1}</div>
                                                     <div className="w-[40%] text-left min-w-0">
-                                                        {editingIndex === index ? (
+                                                        {editingIndex === item.id ? (
                                                             <div className="flex flex-col sm:flex-row items-start sm:items-center">
-                                                                <textarea
+                                                                <input
                                                                     className="w-[70%] border border-yellow-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 md:text-lg md:font-bold text-sm"
                                                                     type="text"
                                                                     autoFocus
@@ -149,18 +147,18 @@ function CheckModul({ history, total, onClose, onDelete }) {
                                                                     onChange={(e) => setTempValue(e.target.value)}
                                                                 />
                                                                 <div className="flex icon-res">
-                                                                    <button className="icons-btn" onClick={() => saveName(index)} ><FaCheck className="icons-style" /></button>
+                                                                    <button className="icons-btn" onClick={() => handleSave(item.id)} ><FaCheck className="icons-style" /></button>
                                                                     <button className="icons-btn" onClick={() => setEditingIndex(null)}><FaXmark className="icons-style" /></button>
                                                                 </div>
                                                             </div>
                                                         ) : (
                                                             <div className="flex items-center group-span">
-                                                                <span className="text-xs sm:text-lg whitespace-normal break-all block">{rowNames[index] || 'Nomlanmagan'}</span>
+                                                                <span className="text-xs sm:text-lg whitespace-normal break-all block">{rowNames[item.id] || 'Nomlanmagan'}</span>
                                                                 <button
                                                                     className="icons-btn ic"
                                                                     onClick={() => {
-                                                                        setEditingIndex(index);
-                                                                        setTempValue(rowNames[index] || '')
+                                                                        setEditingIndex(item.id);
+                                                                        setTempValue(rowNames[item.id] || '')
                                                                     }}
                                                                 ><FaPen className="icons-style" /></button>
                                                             </div>
@@ -169,14 +167,14 @@ function CheckModul({ history, total, onClose, onDelete }) {
                                                     <div className="w-[25%] text-right whitespace-nowrap text-[11px] sm:text-base">{item.operation}</div>
                                                     <div className="w-[25%] text-right whitespace-nowrap text-[11px] sm:text-base">{String(item.res).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')}</div>
                                                     <button className={`block trd-trash md:hidden absolute sm:group-hover:opacity-100 hover:border-red-500 sm:border-2 border-transparent right-0 top-[50%] -translate-y-[50%] z-[105]
-                                                            ${swipedRow === index ? 'translate-x-18' : 'translate-x-20'}
+                                                            ${swipedRow === item.id ? 'translate-x-18' : 'translate-x-20'}
                                                         `}
-                                                        onClick={() => onDelete(index)}
+                                                        onClick={() => onDelete(item)}
                                                     ><FaTrashAlt className="text-sm sm:text-base text-red-500" /></button>
                                                 </div>
                                             </td>
-                                            <div className="absolute -right-20">
-                                                <button className="hidden md:block trd-trash sm:group-hover:opacity-100 hover:border-red-500 opacity-0 sm:border-2 border-transparent" onClick={() => onDelete(index)}><FaTrashAlt className="text-sm sm:text-base text-red-500" /></button>
+                                            <div className="absolute -right-20 ">
+                                                <button className="hidden md:block trd-trash sm:group-hover:opacity-100 hover:border-red-500 opacity-0 sm:border-2 border-transparent" onClick={() => onDelete(item)}><FaTrashAlt className="text-sm sm:text-base text-red-500" /></button>
                                             </div>
                                         </tr>
                                     ))}
