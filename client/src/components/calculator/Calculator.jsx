@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RxDotFilled } from 'react-icons/rx';
 import { FaDeleteLeft } from 'react-icons/fa6';
 import { FaXmark } from "react-icons/fa6";
@@ -98,6 +98,33 @@ function Calculator({ addToHistory, toggleList, showList, isRecording }) {
             setDisplay('0');
         }
     };
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (innerWidth < 678) return;
+            const { key } = e;
+
+            if(/[0-9]/.test(key)) {
+                handleNumber(key);
+            } else if (key === '.') {
+                handleDecimal();
+            } else if (['+', '-', '*', '/'].includes(key)) {
+                handleOperator(key);
+            } else if (key === 'Enter') {
+                handleEqual();
+            } else if (key === 'Backspace') {
+                handleDelete();
+            } else if (key === 'Escape') {
+                handleClear();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        }
+    }, [handleNumber, handleDecimal, handleOperator, handleEqual, handleDelete, handleClear]);
 
     return (
         <div className="w-full h-screen flex justify-center items-center">

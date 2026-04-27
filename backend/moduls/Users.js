@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
     maxDevices: Number,
     usedDevices: [String],
     durationMinutes: Number,
-    expiresAt: { type: Date, default: null }
+    expiresAt: { type: Date, default: null },
+    telegramId: { type: Number, unique: true }
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import bgImage from '../assets/background/bgMain.jpg';
 import Calculator from "./calculator/Calculator";
@@ -13,6 +13,7 @@ function Main() {
     const [showCheck, setShowCheck] = useState(false);
     const [isTimer, setIsTimer] = useState('');
     const [swipedRow, setSwipedRow] = useState(null);
+    const [notification, setNotification] = useState([]);
     const [history, setHistory] = useState(() => {
         const savedHistory = localStorage.getItem('calculatorHistory');
         return savedHistory ? JSON.parse(savedHistory) : [];
@@ -29,7 +30,7 @@ function Main() {
                 operation: `${a} ${op} ${b}`,
                 res: res
             };
-            
+
             const newHistory = [newItem, ...history];
 
             setHistory(newHistory);
@@ -64,7 +65,37 @@ function Main() {
 
     const total = history.reduce((acc, item) => acc + Number(item.res), 0);
 
-    const formattedTotal = String(total).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+    const formattedTotal = String(total).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+    const addNotification = (msg) => {
+        const id = Date.now();
+        const newNotification = { id, msg };
+        setNotification((prev) => [...prev, newNotification]);
+
+        setTimeout(() => {
+            setNotification((prev) => prev.filter((n) => n.id !== id));
+        }, 2000);
+    }
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if(innerWidth < 678) return;
+            if (e.key === 'CapsLock') {
+                const newState = !isRecording;
+
+                setIsRecording(newState);
+
+                const msg = newState ? 'Recording Started' : 'Recording Stopped';
+                addNotification(msg);
+            } else if(e.key === 'h' || e.key === 'H') {
+                setShowList((prev) => !prev);
+            } else if (e.key === ' ') {
+                clearHistory();
+            }
+        }
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isRecording, setIsRecording]);
 
     return (
         <div className="w-full h-screen"
@@ -89,6 +120,20 @@ function Main() {
                 >
                     <TimerDisplay setIsTimer={setIsTimer} />
                 </div>
+                <AnimatePresence>
+                    {notification.map((n) => (
+                        <motion.div
+                            key={n.id}
+                            initial={{ opacity: 0, y: -70 }}
+                            animate={{ opacity: 1, y: 40 }}
+                            exit={{ opacity: 0, y: -70 }}
+                            style={{ padding: '7px 20px', borderRadius: '10px' }}
+                            className="fixed z-[110] bg-white font-bold text-black left-[50%] -translate-x-[50%]"
+                        >
+                            {n.msg}
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
                 <Calculator
                     addToHistory={addToHistory}
                     toggleList={() => setShowList(!showList)}
@@ -100,6 +145,8 @@ function Main() {
                         <motion.div
                             className=""
                             key='historyPanel'
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.6 }}
                         >
@@ -117,7 +164,7 @@ function Main() {
                 </AnimatePresence>
                 <div>
                     {showCheck && (
-                        <CheckModul 
+                        <CheckModul
                             history={history}
                             total={formattedTotal}
                             onClose={() => setShowCheck(false)}

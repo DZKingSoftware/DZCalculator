@@ -1,5 +1,6 @@
 const { Telegraf, Markup } = require('telegraf');
 const axios = require('axios');
+const Users = require('../moduls/Users');
 require('dotenv').config();
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -24,6 +25,13 @@ bot.start((ctx) => {
     ctx.reply(`Calculationga Xush Kelibsiz.`, mainMenu);
 });
 
+bot.command('all', async (ctx) => {
+    if (ctx.from.id !== ADMIN_ID) return;
+
+    adminState[ctx.from.id] = { step: 'WAITING_FOR_BROADCAST' };
+    ctx.reply(`📢 Yuboriladigan Xabarni Kiriting:`);
+});
+
 bot.hears('Login Parol Olish', async (ctx) => {
     const userId = ctx.from.id;
     if (userId === ADMIN_ID) {
@@ -46,6 +54,36 @@ bot.hears(`Ilovaga O'tish`, (ctx) => {
 bot.on('text', async (ctx) => {
     const userId = ctx.from.id;
     const text = ctx.message.text;
+    const state = adminState[userId];
+
+    if (userId === ADMIN_ID && state && state.step === 'WAITING_FOR_BROADCAST') {
+        const messageToSend = text;
+
+        const statusMsg = await ctx.reply(`🚀 Yuborilmoqda...`);
+
+        const users = await Users.find({ telegramId: { $exists: true } });
+
+        let successCount = 0;
+        let failCount = 0;
+
+        for (const user of users) {
+            try {
+                await bot.telegram.sendMessage(user.telegramId, messageToSend);
+                successCount++;
+                await new Promise(r => setTimeout(r, 100));
+            } catch (err) {
+                failCount++;
+            }
+        };
+
+        await bot.telegram.deleteMessage(ctx.chat.id, statusMsg.message_id);
+
+        const finalReport = `✅ Yuborildi: ${success} ta foydalanuvchiga.\n❌ Xatoliklar: ${errorCount}`;
+        await ctx.reply(finalReport);
+
+        delete adminState[userId];
+        return;
+    }
 
     if (userId === ADMIN_ID && ctx.message.reply_to_message) {
         const originalMsg = ctx.message.reply_to_message.text;
@@ -118,5 +156,16 @@ bot.on('text', async (ctx) => {
         }
     }
 });
+
+bot.use(async (ctx, next) => {
+    if (ctx.from) {
+        await Users.findOneAndUpdate(
+            { telegramId: ctx.from.id },
+            { $set: { telegramId: ctx.from.id.toString() } },
+            { upsert: true }
+        )
+    }
+    return next();
+})
 
 module.exports = { bot };
