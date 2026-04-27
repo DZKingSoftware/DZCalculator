@@ -6,8 +6,20 @@ require('dotenv').config();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const ADMIN_ID = Number(process.env.ADMIN_ID);
 
-const adminState = {}; 
+const adminState = {};
 const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${process.env.PORT || 5000}`;
+
+// Middleware: Har bir foydalanuvchini bazaga qo'shish (eng tepada tursin)
+bot.use(async (ctx, next) => {
+    if (ctx.from) {
+        await Users.findOneAndUpdate(
+            { telegramId: ctx.from.id },
+            { $set: { telegramId: ctx.from.id.toString() } },
+            { upsert: true }
+        );
+    }
+    return next();
+});
 
 function parseTimeToMinutes(timeStr) {
     const parts = timeStr.split(':');
@@ -54,13 +66,13 @@ bot.hears(`Ilovaga O'tish`, (ctx) => {
 bot.on('text', async (ctx) => {
     const userId = ctx.from.id;
     const text = ctx.message.text;
+    
+    // State ni faqat bir marta chaqiramiz
     const state = adminState[userId];
 
+    // 1. BROADCAST LOGIKASI
     if (userId === ADMIN_ID && state && state.step === 'WAITING_FOR_BROADCAST') {
-        const messageToSend = text;
-
         const statusMsg = await ctx.reply(`🚀 Yuborilmoqda...`);
-
         const users = await Users.find({ telegramId: { $exists: true } });
 
         let successCount = 0;
@@ -68,23 +80,23 @@ bot.on('text', async (ctx) => {
 
         for (const user of users) {
             try {
-                await bot.telegram.sendMessage(user.telegramId, messageToSend);
+                await bot.telegram.sendMessage(user.telegramId, text);
                 successCount++;
                 await new Promise(r => setTimeout(r, 100));
             } catch (err) {
                 failCount++;
             }
-        };
+        }
 
         await bot.telegram.deleteMessage(ctx.chat.id, statusMsg.message_id);
-
-        const finalReport = `✅ Yuborildi: ${success} ta foydalanuvchiga.\n❌ Xatoliklar: ${errorCount}`;
+        const finalReport = `✅ Yuborildi: ${successCount} ta foydalanuvchiga.\n❌ Xatoliklar: ${failCount}`;
         await ctx.reply(finalReport);
 
         delete adminState[userId];
         return;
     }
 
+    // 2. ADMIN REPLY LOGIKASI
     if (userId === ADMIN_ID && ctx.message.reply_to_message) {
         const originalMsg = ctx.message.reply_to_message.text;
         const targetUserId = originalMsg.match(/ID: (\d+)/)?.[1];
@@ -94,9 +106,8 @@ bot.on('text', async (ctx) => {
         }
     }
 
-    const state = adminState[userId];
+    // 3. USER YARATISH BOSQICHLARI
     if (userId === ADMIN_ID && state) {
-        
         if (state.step === 'ASK_NAME') {
             adminState[userId].name = text;
             adminState[userId].step = 'ASK_DEVICES';
@@ -128,7 +139,7 @@ bot.on('text', async (ctx) => {
                     durationMinutes: duration
                 });
 
-                const { loginToken, passwordToken, expiresAt } = response.data;
+                const { loginToken, passwordToken } = response.data;
                 const durationText = `${duration} daqiqa`;
 
                 if (waitingMsg) {
@@ -140,7 +151,7 @@ bot.on('text', async (ctx) => {
                                    `🔑 *Login:* \`${loginToken}\` \n` +
                                    `🔐 *Password:* \`${passwordToken}\` \n` +
                                    `📱 *Devices:* ${devices} \n` +
-                                   `⏳ *Expires:*  ${durationText}\n` +
+                                   `⏳ *Expires:* ${durationText}\n` +
                                    `⚠️ _Vaqt tugagach, login avtomatik o'chadi\\._`;
 
                 await ctx.replyWithMarkdownV2(resultText);
@@ -156,16 +167,5 @@ bot.on('text', async (ctx) => {
         }
     }
 });
-
-bot.use(async (ctx, next) => {
-    if (ctx.from) {
-        await Users.findOneAndUpdate(
-            { telegramId: ctx.from.id },
-            { $set: { telegramId: ctx.from.id.toString() } },
-            { upsert: true }
-        )
-    }
-    return next();
-})
 
 module.exports = { bot };
