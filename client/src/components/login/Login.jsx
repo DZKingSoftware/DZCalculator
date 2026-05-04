@@ -5,6 +5,7 @@ import successIcon from '../../assets/icons/check.png';
 import errorIcon from '../../assets/icons/remove.png';
 import { getDeviceId } from "../utils/getDeviceId";
 import hangingImg from '../../assets/hanging/hanging.png';
+import { FaLock, FaLockOpen, FaUser, FaUserAltSlash } from 'react-icons/fa';
 import './login.css';
 
 function Login({ onLogin }) {
@@ -16,6 +17,8 @@ function Login({ onLogin }) {
     const [getLogin, setGetLogin] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [inputValue, setInputValue] = useState({ username: false, password: false });
+    const [passwordType, setPasswordType] = useState(false);
+    const [userType, setUserType] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -110,16 +113,19 @@ function Login({ onLogin }) {
                         <label className=" block text-lg text-green-500 font-bold">
                             Username
                         </label>
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => { setUsername(e.target.value), setInputValue(prev => ({ ...prev, username: false })) }}
-                            className="text-green-500 text-lg bg-black w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                            style={{
-                                padding: '5px 10px',
-                            }}
-                            placeholder="Username"
-                        />
+                        <div className="group flex bg-black rounded-lg focus-within:border-green-500 border-2 border-transparent">
+                            <input
+                                type={userType ? 'password' : 'text'}
+                                value={username}
+                                onChange={(e) => { setUsername(e.target.value), setInputValue(prev => ({ ...prev, username: false })) }}
+                                className="text-green-500 text-lg bg-black w-full rounded-lg outline-none"
+                                style={{
+                                    padding: '5px 10px',
+                                }}
+                                placeholder="Username"
+                            />
+                            <button className="text-green-500" type="button" onClick={() => setUserType(!userType)}>{userType ? <FaUserAltSlash /> : <FaUser />}</button>
+                        </div>
                         {inputValue.username && (
                             <div className="text-red-500 text-sm font-bold text-shadow-xs text-shadow-black">Please Enter Login!</div>
                         )}
@@ -129,16 +135,19 @@ function Login({ onLogin }) {
                         <label className="block text-lg text-green-500 font-bold">
                             Password
                         </label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => { setPassword(e.target.value), setInputValue(prev => ({ ...prev, password: false })) }}
-                            className="text-green-500 bg-black text-lg focus:outline-none focus:ring-2 focus:ring-green-500 w-full rounded-lg"
-                            style={{
-                                padding: '5px 10px'
-                            }}
-                            placeholder="******"
-                        />
+                        <div className={`group flex bg-black rounded-lg border-transparent border-2 focus-within:border-green-500`}>
+                            <input
+                                type={passwordType ? 'text' : 'password'}
+                                value={password}
+                                onChange={(e) => { setPassword(e.target.value), setInputValue(prev => ({ ...prev, password: false })) }}
+                                className="text-green-500 bg-transparent text-lg outline-none w-full rounded-lg"
+                                style={{
+                                    padding: '5px 10px'
+                                }}
+                                placeholder="******"
+                            />
+                            <button type="button" onClick={() => setPasswordType(!passwordType)}>{passwordType ? <FaLockOpen className="text-green-500" /> : <FaLock className="text-green-500" />}</button>
+                        </div>
                         {inputValue.password && (
                             <div className="text-red-500 text-sm font-bold text-shadow-xs text-shadow-black">Please Enter Password</div>
                         )}
